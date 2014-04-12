@@ -5,8 +5,9 @@ class Player extends Entity{
   Player(int x, int y){
     this.x = x;
     this.y = y;
-    this.health = 100;
-    this.currenthealth = health;
+    this.maxHealth = 100;
+    this.health = maxHealth;
+    this.calculatehealth();
     items = new Item[4];
     for(int i = 0; i < items.length; i ++){
       items[i] = new Weapond();
@@ -17,29 +18,65 @@ class Player extends Entity{
     if(frame < 24)
       return false;
     
+    //Movement in 4 directions
     if(keyboard.timedpress(UP, 100) && !keyboard.keys[DOWN]){
-      if(!move(up, map) && !attack(up, map)){
+      if(!attack(up, map)){
+        if(!move(up, map) && direction != up){
+          direction = up;
+          return true;
+        }
         return false;
       }
       return true;
     }
     else if(keyboard.timedpress(LEFT, 100) && !keyboard.keys[RIGHT]){
-      if(!move(left, map) && !attack(left, map)){
-        return false;
+      if(!attack(left, map)){
+        if(!move(left, map)){
+          direction = left;
+          return true;
+        }
       }
       return true;
     }
     else if(keyboard.timedpress(DOWN, 100) && !keyboard.keys[UP]){
-      if(!move(down, map) && !attack(down, map)){
-        return false;
+      if(!attack(down, map)){
+        if(!move(down, map)){
+          direction = down;
+          return true;
+        }
       }
       return true;
     }
     else if(keyboard.timedpress(RIGHT, 100) && !keyboard.keys[LEFT]){
-      if(!move(right, map) && !attack(right, map)){
-        return false;
+      if(!attack(right, map)){
+        if(!move(right, map)){
+          direction = right;
+          return true;
+        }
       }
       return true;
+    }
+    
+    //Other buttons
+    else if(keyboard.cantoggle[122] && keyboard.timedpress(122, 100)){
+      switch(direction){
+        case up:
+          map.tiles[x][y - 1].activate(map);
+          keyboard.cantoggle[122] = false;
+        break;
+        case left:
+          map.tiles[x - 1][y].activate(map);
+          keyboard.cantoggle[122] = false;
+        break;
+        case down:
+          map.tiles[x][y + 1].activate(map);
+          keyboard.cantoggle[122] = false;
+        break;
+        case right:
+          map.tiles[x + 1][y].activate(map);
+          keyboard.cantoggle[122] = false;
+        break;
+      }
     }
     return false;
   }

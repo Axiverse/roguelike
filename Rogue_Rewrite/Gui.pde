@@ -70,7 +70,7 @@ class PlayerStats extends Element{
     rect(x, y + 60, width * player.healthpercent, 10);
     textSize(10);
     fill(0);
-    text(player.currenthealth + " / " + player.health, x + 4, y + 70);
+    text(player.health + " / " + player.maxHealth, x + 4, y + 70);
     
     //Hotbar (Items)
     for(int i = 0; i < player.items.length; i ++){

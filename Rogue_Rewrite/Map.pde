@@ -130,7 +130,7 @@ class Map{
               tiles[i][j - roomheight / 2] = new Stair();
               hasstair = true;
             }
-            tiles[i][j] = new Floor();
+            tiles[i][j] = (random(1) > .5) ? new Door() : new Floor();
             tiles[i][j - 1] = new Floor();
             roomcount ++;
           }
@@ -145,7 +145,7 @@ class Map{
               tiles[i - roomwidth / 2][j] = new Stair();
               hasstair = true;
             }
-            tiles[i][j] = new Floor();
+            tiles[i][j] = (random(1) > .5) ? new Door() : new Floor();
             tiles[i - 1][j] = new Floor();
             roomcount ++;
           }
@@ -160,7 +160,7 @@ class Map{
               tiles[i][j + roomheight / 2] = new Stair();
               hasstair = true;
             }
-            tiles[i][j] = new Floor();
+            tiles[i][j] = (random(1) > .5) ? new Door() : new Floor();
             tiles[i][j + 1] = new Floor();
             roomcount ++;
           }
@@ -175,7 +175,7 @@ class Map{
               tiles[i + roomheight / 2][j] = new Stair();
               hasstair = true;
             }
-            tiles[i][j] = new Floor();
+            tiles[i][j] = (random(1) > .5) ? new Door() : new Floor();
             tiles[i + 1][j] = new Floor();
             roomcount ++;
           }
@@ -241,7 +241,7 @@ class Map{
   
   void process(){
     for(int i = 0; i < actors.size(); i ++){
-      if(actors.get(i).currenthealth <= 0){
+      if(actors.get(i).health <= 0){
         entities[actors.get(i).x][actors.get(i).y] = null;
         actors.remove(i);
       }
@@ -309,7 +309,7 @@ class Dungeon{
     }
     if(enemyturn){
       map.enemyturn();
-      if(map.player.currenthealth <= 0){
+      if(map.player.health <= 0){
         floor = 0;
         map = new Map(10, 10);
       }
@@ -353,6 +353,10 @@ class Tile{
     return;
   }
   
+  void activate(Map map){
+    return;
+  }
+  
   void render(int x, int y){
     fill(192);
     rect(x * tilesize, y * tilesize, tilesize, tilesize);
@@ -381,6 +385,28 @@ class Stair extends Tile{
   
   void render(int x, int y){
     fill(255, 255, 0);
+    rect(x * tilesize, y * tilesize, tilesize, tilesize);
+  }
+}
+
+class Door extends Tile{
+  Door(){
+    canmove = false;
+  }
+  
+  void activate(Map map){
+    canmove = !canmove;
+  }
+  
+  void onstep(Map map){
+    return;
+  }
+  
+  void render(int x, int y){
+    if(canmove)
+      fill(153, 102, 51);
+    else
+      fill(128, 96, 64);
     rect(x * tilesize, y * tilesize, tilesize, tilesize);
   }
 }
