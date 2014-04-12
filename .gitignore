@@ -63,6 +63,8 @@ build/
 *.pdb
 *.pg
 
-##Processing
+#################
+## Processing
+#################
 
 *.properties
