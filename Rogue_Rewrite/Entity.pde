@@ -353,27 +353,32 @@ abstract class Entity{
     
     if(frame < 24){
       fill(0, 255, 255);
-      rect((x + a - tempx) * tilesize + (frame * tempx), (y + b - tempy) * tilesize + (frame * tempy), tilesize, tilesize);
+      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, tilesize);
       
       fill(255, 255, 255);
-      rect((x + a - tempx) * tilesize + (frame * tempx), (y + b - tempy) * tilesize + (frame * tempy), tilesize, 6);
+      rect((x- tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, 6);
       
       fill(0, 255, 0);
-      rect((x + a - tempx) * tilesize + (frame * tempx), (y + b - tempy) * tilesize + (frame * tempy), (healthpercent) * tilesize, 6);
+      rect((x- tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, (healthpercent) * tilesize, 6);
       
       frame += 4;
     }
     else{
       fill(0, 255, 255);
-      rect((x + a) * tilesize, (y + b) * tilesize, tilesize, tilesize);
+      rect(x * tilesize + a, y * tilesize + b, tilesize, tilesize);
       
       fill(255, 255, 255);
-      rect((x + a) * tilesize, (y + b) * tilesize, tilesize, 6);
+      rect(x* tilesize + a, y * tilesize + b, tilesize, 6);
       
       fill(0, 255, 0);
-      rect((x + a) * tilesize, (y + b) * tilesize, (healthpercent) * tilesize, 6);
+      rect(x * tilesize + a, y * tilesize + b, (healthpercent) * tilesize, 6);
     }
   }
+  
+  void renderTile(int a, int b){
+    render(a * tilesize, b * tilesize);
+  }
+  
 }
 
 class Enemy extends Entity{

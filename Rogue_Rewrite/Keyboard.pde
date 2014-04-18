@@ -34,6 +34,7 @@ void keyPressed(){
     }
     else if (keyCode < keyboard.keys.length){
       keyboard.keys[keyCode] = true;
+      
     }
   }
   else if (key < keyboard.keys.length){

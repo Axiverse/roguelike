@@ -21,11 +21,10 @@ class Player extends Entity{
     //Movement in 4 directions
     if(keyboard.timedpress(UP, 100) && !keyboard.keys[DOWN]){
       if(!attack(up, map)){
-        if(!move(up, map) && direction != up){
+        if(!move(up, map)){
           direction = up;
           return true;
         }
-        return false;
       }
       return true;
     }
@@ -86,6 +85,7 @@ class Player extends Entity{
   }
   
   void renderStill(int a, int b){
+      //this.frame = 24;
       fill(255, 0, 0);
       rect((x + a) * tilesize, (y + b) * tilesize, tilesize, tilesize);
       
@@ -115,25 +115,25 @@ class Player extends Entity{
     
     if(frame < 24){
       fill(255, 0, 0);
-      rect((x + a - tempx) * tilesize + (frame * tempx), (y + b - tempy) * tilesize + (frame * tempy), tilesize, tilesize);
+      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, tilesize);
       
       fill(255, 255, 255);
-      rect((x + a - tempx) * tilesize + (frame * tempx), (y + b - tempy) * tilesize + (frame * tempy), tilesize, 6);
+      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, 6);
       
       fill(0, 255, 0);
-      rect((x + a - tempx) * tilesize + (frame * tempx), (y + b - tempy) * tilesize + (frame * tempy), (healthpercent) * tilesize, 6);
+      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, (healthpercent) * tilesize, 6);
       
       frame += 4;
     }
     else{
       fill(255, 0, 0);
-      rect((x + a) * tilesize, (y + b) * tilesize, tilesize, tilesize);
+      rect(x * tilesize + a, y * tilesize + b, tilesize, tilesize);
       
       fill(255, 255, 255);
-      rect((x + a) * tilesize, (y + b) * tilesize, tilesize, 6);
+      rect(x * tilesize + a, y * tilesize + b, tilesize, 6);
       
       fill(0, 255, 0);
-      rect((x + a) * tilesize, (y + b) * tilesize, (healthpercent) * tilesize, 6);
+      rect(x * tilesize + a, y * tilesize + b, (healthpercent) * tilesize, 6);
     }
 
   }
