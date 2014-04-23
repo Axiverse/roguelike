@@ -259,6 +259,29 @@ class Map{
     }
   }
   
+  void calcFog(){
+    
+    for(int i = 0; i < screenwidth / tilesize; i ++){
+      for(int j = 0; j < screenheight / tilesie, j ++){
+        int tempx = i + offsetx;
+        int tempy = j + offsety;
+        
+        //Pray to God that this works
+        if(sqrt(pow(tempx - player.x, 2) + pow(tempy - player.y)) <= 8){
+          
+          //Rereading the Bible
+          tiles[tempx][tempy].fog = 16 - (int)sqrt(pow(tempx - player.x, 2) + pow(tempy - player.y));
+          
+        }
+        else{
+          //tithing
+          tiles[tempx][tempy].fog = 0;
+        }
+      }
+    }
+  }
+  
+  
   void render(){
     
     if(!((width <= screenwidth / tilesize) && (height <= screenheight / tilesize))){
@@ -380,12 +403,14 @@ class Map{
 class Dungeon{
   Map map;
   int floor;
+  int[][] fog;
   PlayerStats stats;
   //Generator
   Dungeon(){
     map = new Map(40, 40);
     floor = 0;
     stats = new PlayerStats(486, 0);
+    fog = new int[screenwidth /  tilesize][screenheight / tilesize];
   }
   
   void process(){
@@ -416,6 +441,7 @@ class Dungeon{
     map.render();
     stats.render(map.player, this);
   }
+  
 }
 
 
@@ -438,6 +464,7 @@ class Tile{
   //tile type
   //trap? activated?
   boolean canmove;
+  int fog;
   
   Tile(){
     canmove = true;
