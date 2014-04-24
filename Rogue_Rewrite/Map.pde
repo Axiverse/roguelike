@@ -403,14 +403,12 @@ class Map{
 class Dungeon{
   Map map;
   int floor;
-  int[][] fog;
   PlayerStats stats;
   //Generator
   Dungeon(){
     map = new Map(40, 40);
     floor = 0;
     stats = new PlayerStats(486, 0);
-    fog = new int[screenwidth /  tilesize][screenheight / tilesize];
   }
   
   void process(){
@@ -484,6 +482,15 @@ class Tile{
   
   void render(int x, int y){
     fill(192);
+    rect(x, y, tilesize, tilesize);
+  }
+
+  void renderTileFog(int x, int y){
+    renderFog(x * tilesize, y * tilesize);
+  }
+
+  void renderFog(int x, int y){
+    fill(0, fog * 16);
     rect(x, y, tilesize, tilesize);
   }
 }
