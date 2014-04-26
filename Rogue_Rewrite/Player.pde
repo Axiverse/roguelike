@@ -22,15 +22,18 @@ class Player extends Entity{
     if(keyboard.timedpress(UP, 100) && !keyboard.keys[DOWN]){
       if(!attack(up, map)){
         if(!move(up, map)){
-          direction = up;
-          return true;
+          if(direction != up){
+            direction = up;
+            return true;
+          }
         }
+        return true;
       }
-      return true;
+      return false;
     }
     else if(keyboard.timedpress(LEFT, 100) && !keyboard.keys[RIGHT]){
       if(!attack(left, map)){
-        if(!move(left, map)){
+        if(!move(left, map) && direction != left){
           direction = left;
           return true;
         }
@@ -39,7 +42,7 @@ class Player extends Entity{
     }
     else if(keyboard.timedpress(DOWN, 100) && !keyboard.keys[UP]){
       if(!attack(down, map)){
-        if(!move(down, map)){
+        if(!move(down, map) && direction != down){
           direction = down;
           return true;
         }
@@ -48,7 +51,7 @@ class Player extends Entity{
     }
     else if(keyboard.timedpress(RIGHT, 100) && !keyboard.keys[LEFT]){
       if(!attack(right, map)){
-        if(!move(right, map)){
+        if(!move(right, map) && direction!= right){
           direction = right;
           return true;
         }

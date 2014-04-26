@@ -3,6 +3,7 @@ class Map{
   int width, height;
   Tile[][] tiles;
   Entity[][] entities;
+  Item[][] items;
   Player player;
   ArrayList<Entity> actors;
   boolean floorup;
@@ -49,6 +50,16 @@ class Map{
     this(w, h);
     generate();
     this.player = player;
+    
+    while(!(tiles[player.x][player.y] != null && tiles[player.x][player.y] instanceof Floor)){
+      int tempx = (int)random(0, width - 1);
+      int tempy = (int)random(0, height - 1);
+      if(tiles[tempx][tempy] != null && tiles[tempx][tempy] instanceof Floor){
+        player.x = tempx;
+        player.y = tempy;
+      }
+    }
+    
     addentity(player);
     
     offsetx = (screenwidth / tilesize) / 2 - player.x;
@@ -241,6 +252,10 @@ class Map{
   
   void enemyturn(){
     for(int i = 0; i < actors.size(); i ++){
+      if(!(tiles[actors.get(i).x][actors.get(i).y] != null && tiles[actors.get(i).x][actors.get(i).y].canmove)){
+        actors.remove(i);
+      }
+      
       if(!(actors.get(i) instanceof Player))
         actors.get(i).turn(this);
     }
