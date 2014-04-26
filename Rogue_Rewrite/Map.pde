@@ -8,8 +8,10 @@ class Map{
   ArrayList<Entity> actors;
   boolean floorup;
   int offsetx, offsety;
+  boolean isRenderingFog;
   
   Map(int w, int h){
+    isRenderingFog = true;
     floorup = false;
     this.width = w;
     this.height = h;
@@ -34,6 +36,7 @@ class Map{
     
     spawnstuff();
     
+    calcFog();
     /*
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
@@ -77,6 +80,8 @@ class Map{
     }
     */
     spawnstuff();
+    
+    calcFog();
   }
   
   void spawnstuff(){
@@ -277,20 +282,22 @@ class Map{
   void calcFog(){
     
     for(int i = 0; i < screenwidth / tilesize; i ++){
-      for(int j = 0; j < screenheight / tilesie, j ++){
-        int tempx = i + offsetx;
-        int tempy = j + offsety;
+      for(int j = 0; j < screenheight / tilesize; j ++){
+        int tempx = i - offsetx;
+        int tempy = j - offsety;
         
         //Pray to God that this works
-        if(sqrt(pow(tempx - player.x, 2) + pow(tempy - player.y)) <= 8){
+        if(sqrt(pow(tempx - player.x, 2) + pow(tempy - player.y, 2)) <= 8){
           
           //Rereading the Bible
-          tiles[tempx][tempy].fog = 16 - (int)sqrt(pow(tempx - player.x, 2) + pow(tempy - player.y));
+          if(tiles[tempx][tempy] != null)
+            tiles[tempx][tempy].fog = 8 - (int)sqrt(pow(tempx - player.x, 2) + pow(tempy - player.y, 2));
           
         }
         else{
           //tithing
-          tiles[tempx][tempy].fog = 0;
+          if(tiles[tempx][tempy] != null)
+            tiles[tempx][tempy].fog = 0;
         }
       }
     }
@@ -380,17 +387,28 @@ class Map{
     
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
-        if(tiles[i][j] != null)
+        if(tiles[i][j] != null){
           tiles[i][j].render((i + x + tempx) * tilesize - (player.frame * tempx), (j + y + tempy) * tilesize - (player.frame * tempy));
+        }
       }
     }
+    
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
         if(entities[i][j] != null){
           if(entities[i][j] instanceof Player)
             entities[i][j].renderStill(x, y);
-          else
+          else{
             entities[i][j].render((x + tempx) * tilesize - (player.frame * tempx), (y + tempy) * tilesize - (player.frame * tempy));
+          }
+        }
+      }
+    }
+    
+    for(int i = 0; i < width; i ++){
+      for(int j = 0; j < height; j ++){
+        if(tiles[i][j] != null && isRenderingFog){
+            tiles[i][j].renderFog((i + x + tempx) * tilesize - (player.frame * tempx), (j + y + tempy) * tilesize - (player.frame * tempy));
         }
       }
     }
@@ -401,16 +419,28 @@ class Map{
   void render(int x, int y){
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
-        if(tiles[i][j] != null)
+        if(tiles[i][j] != null){
           tiles[i][j].renderTile(i + x, j + y);
+        }
       }
     }
+    
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
-        if(entities[i][j] != null)
+        if(entities[i][j] != null){
           entities[i][j].renderTile(x, y);
+        }
       }
     }
+    
+    for(int i = 0; i < width; i ++){
+      for(int j = 0; j < height; j ++){
+        if(tiles[i][j] != null && isRenderingFog){
+          tiles[i][j].renderTileFog(i + x, j + y);
+        }
+      }
+    }
+    
   }
   
 }
@@ -429,6 +459,7 @@ class Dungeon{
   void process(){
     boolean enemyturn = false;
     if(map.player.input(map)){
+      map.calcFog();
       enemyturn = true;
       map.tiles[map.player.x][map.player.y].onstep(map);
       
@@ -505,8 +536,10 @@ class Tile{
   }
 
   void renderFog(int x, int y){
-    fill(0, fog * 16);
+    noStroke();
+    fill(0, 255 - (fog * 32));
     rect(x, y, tilesize, tilesize);
+    stroke(0);
   }
 }
 

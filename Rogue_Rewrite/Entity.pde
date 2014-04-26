@@ -352,14 +352,17 @@ abstract class Entity{
     }
     
     if(frame < 24){
+      //Square
       fill(0, 255, 255);
       rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, tilesize);
       
+      //Health bar background
       fill(255, 255, 255);
-      rect((x- tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, 6);
+      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, 6);
       
+      //Health bar front
       fill(0, 255, 0);
-      rect((x- tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, (healthpercent) * tilesize, 6);
+      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, (healthpercent) * tilesize, 6);
       
       frame += 4;
     }
@@ -368,10 +371,11 @@ abstract class Entity{
       rect(x * tilesize + a, y * tilesize + b, tilesize, tilesize);
       
       fill(255, 255, 255);
-      rect(x* tilesize + a, y * tilesize + b, tilesize, 6);
+      rect(x * tilesize + a, y * tilesize + b, tilesize, 6);
       
       fill(0, 255, 0);
       rect(x * tilesize + a, y * tilesize + b, (healthpercent) * tilesize, 6);
+
     }
   }
   

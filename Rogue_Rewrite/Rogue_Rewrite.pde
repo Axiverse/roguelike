@@ -1,7 +1,7 @@
 final int screenwidth = 480;
 final int screenheight = 480;
 
-int tilesize = 24;
+final int tilesize = 24;
 
 final int up = 1;
 final int left = 2;
