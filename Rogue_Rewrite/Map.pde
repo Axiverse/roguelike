@@ -459,7 +459,7 @@ class Dungeon{
   void process(){
     boolean enemyturn = false;
     if(map.player.input(map)){
-      map.calcFog();
+      //map.calcFog();
       enemyturn = true;
       map.tiles[map.player.x][map.player.y].onstep(map);
       

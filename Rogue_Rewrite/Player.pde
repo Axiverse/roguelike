@@ -18,6 +18,7 @@ class Player extends Entity{
     if(frame < 24)
       return false;
     
+    map.calcFog();
     //Movement in 4 directions
     if(keyboard.timedpress(UP, 100) && !keyboard.keys[DOWN]){
       if(!attack(up, map)){
