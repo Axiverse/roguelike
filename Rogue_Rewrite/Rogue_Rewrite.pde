@@ -1,18 +1,20 @@
-final int screenwidth = 480;
-final int screenheight = 480;
+final int SCREENWIDTH = 480;
+final int SCREENHEIGHT = 480;
 
-final int tilesize = 24;
+final int TILESIZE = 24;
 
 final int up = 1;
 final int left = 2;
 final int down = 3;
 final int right = 4;
 
+final int MAXLIGHT = 8;
+
 Keyboard keyboard = new Keyboard();
 Dungeon test = new Dungeon();
 
 void setup(){
-  size(screenwidth + 160, screenheight);
+  size(SCREENWIDTH + 160, SCREENHEIGHT);
   //size(displayWidth, displayHeight);
   frameRate(60);
   frame.setTitle("not rogue");

@@ -1,4 +1,4 @@
-class Player extends Entity{
+class Player extends Creature{
   
   Item[] items;
   
@@ -12,6 +12,8 @@ class Player extends Entity{
     for(int i = 0; i < items.length; i ++){
       items[i] = new Weapond();
     }
+    
+    this.light = 8;
   }
   
   boolean input(Map map){
@@ -91,13 +93,13 @@ class Player extends Entity{
   void renderStill(int a, int b){
       //this.frame = 24;
       fill(255, 0, 0);
-      rect((x + a) * tilesize, (y + b) * tilesize, tilesize, tilesize);
+      rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, TILESIZE);
       
       fill(255, 255, 255);
-      rect((x + a) * tilesize, (y + b) * tilesize, tilesize, 6);
+      rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, 6);
       
       fill(0, 255, 0);
-      rect((x + a) * tilesize, (y + b) * tilesize, (healthpercent) * tilesize, 6);
+      rect((x + a) * TILESIZE, (y + b) * TILESIZE, (healthpercent) * TILESIZE, 6);
   }
   
   void render(int a, int b){
@@ -119,25 +121,25 @@ class Player extends Entity{
     
     if(frame < 24){
       fill(255, 0, 0);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, tilesize);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, TILESIZE);
       
       fill(255, 255, 255);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, 6);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
       
       fill(0, 255, 0);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, (healthpercent) * tilesize, 6);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, (healthpercent) * TILESIZE, 6);
       
       frame += 4;
     }
     else{
       fill(255, 0, 0);
-      rect(x * tilesize + a, y * tilesize + b, tilesize, tilesize);
+      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, TILESIZE);
       
       fill(255, 255, 255);
-      rect(x * tilesize + a, y * tilesize + b, tilesize, 6);
+      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, 6);
       
       fill(0, 255, 0);
-      rect(x * tilesize + a, y * tilesize + b, (healthpercent) * tilesize, 6);
+      rect(x * TILESIZE + a, y * TILESIZE + b, (healthpercent) * TILESIZE, 6);
     }
 
   }

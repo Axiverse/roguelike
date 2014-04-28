@@ -1,10 +1,8 @@
 abstract class Entity{
-  int maxHealth;
-  int health;
-  float healthpercent;
   int x, y;
   int direction;
   
+  int light;
   int frame;
   
   //weapon
@@ -12,17 +10,102 @@ abstract class Entity{
   //etc
   
   Entity(){
+    this(1, 1);
+  }
+  
+  Entity(int x, int y){
+    this.x = x;
+    this.y = y;
+    frame = 24;
+    
+    light = 0;
+  }
+  
+  boolean turn(Map map){
+    return false;
+  }
+  
+  void render(){
+    fill(0, 255, 0);
+    rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE);
+  }
+  
+  abstract void renderStill(int a, int b);
+  
+  void render(int a, int b){
+    int tempx, tempy;
+    if(direction % 2 == 1){//Vertical directions
+      tempx = 0;
+      if(direction == 1)
+        tempy = -1;
+      else
+        tempy = 1;
+    }
+    else{
+      tempy = 0;
+      if(direction == 2)
+        tempx = -1;
+      else
+        tempx = 1;
+    }
+    
+    if(frame < 24){
+      //Square
+      fill(0, 255, 255);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, TILESIZE);
+      
+      /*
+      //Health bar background
+      fill(255, 255, 255);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
+      
+      //Health bar front
+      fill(0, 255, 0);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, (healthpercent) * TILESIZE, 6);
+      */
+      
+      frame += 4;
+    }
+    else{
+      fill(0, 255, 255);
+      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, TILESIZE);
+      /*
+      fill(255, 255, 255);
+      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, 6);
+      
+      fill(0, 255, 0);
+      rect(x * TILESIZE + a, y * TILESIZE + b, (healthpercent) * TILESIZE, 6);
+      */
+    }
+  }
+  
+  void renderTile(int a, int b){
+    render(a * TILESIZE, b * TILESIZE);
+  }
+  
+}
+
+abstract class Creature extends Entity{
+  
+  Creature(){
     this(1, 1, 10);
   }
   
-  Entity(int x, int y, int health){
+  Creature(int x, int y, int health){
     this.x = x;
     this.y = y;
     this.maxHealth = health;
     this.health = health;
     healthpercent = (float) health / (float) maxHealth;
-    frame = 24;
+    
+    this.frame = 24;
+    this.light = 0;
   }
+  
+  int maxHealth;
+  int health;
+  float healthpercent;
+  
   
   abstract boolean turn(Map map);
   
@@ -277,45 +360,54 @@ abstract class Entity{
   }
   
   boolean attack(int direction, Map map){
+    
     int damage = 1;
     switch(direction){
       case up:
         if(y > 0 && map.entities[x][y - 1] != null){
-          map.entities[x][y - 1].health -= damage;
-          map.entities[x][y - 1].calculatehealth();
-          if(map.entities[x][y - 1].health <= 0){
+          if(!(map.entities[x][y - 1] instanceof Creature))
+            return false;
+          ((Creature)map.entities[x][y - 1]).health -= damage;
+          ((Creature)map.entities[x][y - 1]).calculatehealth();
+          //if(((Creature)map.entities[x][y - 1]).health <= 0){
             //map.entities[x][y - 1] = null;
-          }
+          //}
           return true;
         }
       break;
       case left:
         if(x > 0 && map.entities[x - 1][y] != null){
-          map.entities[x - 1][y].health -= damage;
-          map.entities[x - 1][y].calculatehealth();
-          if(map.entities[x - 1][y].health <= 0){
+          if(!(map.entities[x - 1][y] instanceof Creature))
+            return false;
+          ((Creature)map.entities[x - 1][y]).health -= damage;
+          ((Creature)map.entities[x - 1][y]).calculatehealth();
+          //if(map.entities[x - 1][y].health <= 0){
             //map.entities[x - 1][y] = null;
-          }
+          //}
           return true;
         }
       break;
       case down:
         if(y < map.height - 1 && map.entities[x][y + 1] != null){
-          map.entities[x][y + 1].health -= damage;
-          map.entities[x][y + 1].calculatehealth();
-          if(map.entities[x][y + 1].health <= 0){
+          if(!(map.entities[x][y + 1] instanceof Creature))
+            return false;
+          ((Creature)map.entities[x][y + 1]).health -= damage;
+          ((Creature)map.entities[x][y + 1]).calculatehealth();
+          //if(map.entities[x][y + 1].health <= 0){
             //map.entities[x][y + 1] = null;
-          }
+          //}
           return true;
         }
       break;
       case right:
         if(x < map.width - 1 && map.entities[x + 1][y] != null){
-          map.entities[x + 1][y].health -= damage;
-          map.entities[x + 1][y].calculatehealth();
-          if(map.entities[x + 1][y].health <= 0){
+          if(!(map.entities[x + 1][y] instanceof Creature))
+            return false;
+          ((Creature)map.entities[x + 1][y]).health -= damage;
+          ((Creature)map.entities[x + 1][y]).calculatehealth();
+          //if(map.entities[x + 1][y].health <= 0){
             map.entities[x + 1][y] = null;
-          }
+          //}
           return true;
         }
       break;
@@ -327,65 +419,9 @@ abstract class Entity{
     healthpercent = (float) health / maxHealth;
   }
   
-  void render(){
-    fill(0, 255, 0);
-    rect(x * tilesize, y * tilesize, tilesize, tilesize);
-  }
-  
-  abstract void renderStill(int a, int b);
-  
-  void render(int a, int b){
-    int tempx, tempy;
-    if(direction % 2 == 1){//Vertical directions
-      tempx = 0;
-      if(direction == 1)
-        tempy = -1;
-      else
-        tempy = 1;
-    }
-    else{
-      tempy = 0;
-      if(direction == 2)
-        tempx = -1;
-      else
-        tempx = 1;
-    }
-    
-    if(frame < 24){
-      //Square
-      fill(0, 255, 255);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, tilesize);
-      
-      //Health bar background
-      fill(255, 255, 255);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, 6);
-      
-      //Health bar front
-      fill(0, 255, 0);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, (healthpercent) * tilesize, 6);
-      
-      frame += 4;
-    }
-    else{
-      fill(0, 255, 255);
-      rect(x * tilesize + a, y * tilesize + b, tilesize, tilesize);
-      
-      fill(255, 255, 255);
-      rect(x * tilesize + a, y * tilesize + b, tilesize, 6);
-      
-      fill(0, 255, 0);
-      rect(x * tilesize + a, y * tilesize + b, (healthpercent) * tilesize, 6);
-
-    }
-  }
-  
-  void renderTile(int a, int b){
-    render(a * tilesize, b * tilesize);
-  }
-  
 }
 
-class Enemy extends Entity{
+class Enemy extends Creature{
   
   int suggestion; //for swarm/team calcs
   
@@ -441,13 +477,13 @@ class Enemy extends Entity{
   
   void renderStill(int a, int b){
     fill(0, 255, 255);
-    rect((x + a) * tilesize, (y + b) * tilesize, tilesize, tilesize);
+    rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, TILESIZE);
     
     fill(255, 255, 255);
-    rect((x + a) * tilesize, (y + b) * tilesize, tilesize, 6);
+    rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, 6);
     
     fill(0, 255, 0);
-    rect((x + a) * tilesize, (y + b) * tilesize, (healthpercent) * tilesize, 6);
+    rect((x + a) * TILESIZE, (y + b) * TILESIZE, (healthpercent) * TILESIZE, 6);
   }
   
 }

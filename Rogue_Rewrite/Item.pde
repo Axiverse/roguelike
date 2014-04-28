@@ -7,7 +7,7 @@ abstract class Item{
   void render(int x, int y){
     //Some stuff here?
     fill(255);
-    rect(x, y, tilesize + 4, tilesize + 4);
+    rect(x, y, TILESIZE + 4, TILESIZE + 4);
   }
 }
 

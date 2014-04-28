@@ -31,8 +31,8 @@ class Map{
     player = new Player(int(width/2), int(height/2));
     addentity(player);
     
-    offsetx = (screenwidth / tilesize) / 2 - player.x;
-    offsety = (screenheight / tilesize) / 2 - player.y;
+    offsetx = (SCREENWIDTH / TILESIZE) / 2 - player.x;
+    offsety = (SCREENHEIGHT / TILESIZE) / 2 - player.y;
     
     spawnstuff();
     
@@ -65,8 +65,8 @@ class Map{
     
     addentity(player);
     
-    offsetx = (screenwidth / tilesize) / 2 - player.x;
-    offsety = (screenheight / tilesize) / 2 - player.y;
+    offsetx = (SCREENWIDTH / TILESIZE) / 2 - player.x;
+    offsety = (SCREENHEIGHT / TILESIZE) / 2 - player.y;
     /*
     while(tiles[player.x][player.y] != null || !tiles[player.x][player.y].canmove){
       int i = (int)random(-5, 5);
@@ -268,7 +268,7 @@ class Map{
   
   void process(){
     for(int i = 0; i < actors.size(); i ++){
-      if(actors.get(i).health <= 0){
+      if(actors.get(i) instanceof Creature && ((Creature)actors.get(i)).health <= 0){
         entities[actors.get(i).x][actors.get(i).y] = null;
         actors.remove(i);
       }
@@ -280,9 +280,30 @@ class Map{
   }
   
   void calcFog(){
+    for(int i = 0; i < this.width; i ++){
+      for(int j = 0; j < this.height; j ++){
+        if(tiles[i][j] != null)
+          tiles[i][j].light = 0;
+      }
+    }
     
-    for(int i = 0; i < screenwidth / tilesize; i ++){
-      for(int j = 0; j < screenheight / tilesize; j ++){
+    for(int i = 0; i < this.width; i ++){
+      for(int j = 0; j < this.height; j ++){
+        if(entities[i][j] != null && entities[i][j].light > 0){
+          for(int a = -1 * entities[i][j].light; a < entities[i][j].light; a ++){
+            for(int b = -1 * entities[i][j].light; b < entities[i][j].light; b ++){
+              if(i + a > 0 && j + b > 0 && i + a < width && j + b < height && sqrt(pow(a, 2) + pow(b, 2)) < MAXLIGHT){
+                if(tiles[i + a][j + b] != null && entities[i][j].light > 0)
+                  tiles[i + a][j + b].light -= MAXLIGHT - sqrt(pow(a, 2) + pow(b, 2));
+              }
+            }
+          }
+        }
+      }
+    }
+    /*
+    for(int i = 0; i < SCREENWIDTH / TILESIZE; i ++){
+      for(int j = 0; j < SCREENHEIGHT / TILESIZE; j ++){
         int tempx = i - offsetx;
         int tempy = j - offsety;
         
@@ -301,52 +322,53 @@ class Map{
         }
       }
     }
+    */
   }
   
   
   void render(){
     
-    if(!((width <= screenwidth / tilesize) && (height <= screenheight / tilesize))){
-      offsetx = (screenwidth / tilesize) / 2 - player.x;
-      offsety = (screenheight / tilesize) / 2 - player.y;
+    if(!((width <= SCREENWIDTH / TILESIZE) && (height <= SCREENHEIGHT / TILESIZE))){
+      offsetx = (SCREENWIDTH / TILESIZE) / 2 - player.x;
+      offsety = (SCREENHEIGHT / TILESIZE) / 2 - player.y;
     }
     
     if(offsetx > 0)
       offsetx = 0;
     if(offsety > 0)
       offsety = 0;
-    if(offsetx + width < screenwidth / tilesize)
-      offsetx = screenwidth / tilesize - width;
-    if(offsety + height < screenheight / tilesize)
-      offsety = screenheight / tilesize - height;
-    if(width < screenwidth / tilesize)
-      offsetx = ((screenwidth / tilesize) - width) / 2;
-    if(height < screenheight / tilesize)
-      offsety = ((screenheight / tilesize) - height) / 2;
+    if(offsetx + width < SCREENWIDTH / TILESIZE)
+      offsetx = SCREENWIDTH / TILESIZE - width;
+    if(offsety + height < SCREENHEIGHT / TILESIZE)
+      offsety = SCREENHEIGHT / TILESIZE - height;
+    if(width < SCREENWIDTH / TILESIZE)
+      offsetx = ((SCREENWIDTH / TILESIZE) - width) / 2;
+    if(height < SCREENHEIGHT / TILESIZE)
+      offsety = ((SCREENHEIGHT / TILESIZE) - height) / 2;
       
       /*
-    if(offsetx + width == screenwidth / tilesize){
+    if(offsetx + width == SCREENWIDTH / TILESIZE){
       print("!");
     }
       //render(offsetx, offsety);
     */
-    if(player.x == (screenwidth / tilesize) / 2 && player.direction == left){
+    if(player.x == (SCREENWIDTH / TILESIZE) / 2 && player.direction == left){
       renderStill(offsetx, offsety);
     }
-    else if(player.y == (screenheight / tilesize) / 2 && player.direction == up){
+    else if(player.y == (SCREENHEIGHT / TILESIZE) / 2 && player.direction == up){
       renderStill(offsetx, offsety);
     }
-    else if(width - player.x == (screenwidth / tilesize) / 2 && player.direction == right){
+    else if(width - player.x == (SCREENWIDTH / TILESIZE) / 2 && player.direction == right){
       renderStill(offsetx, offsety);
     }
-    else if(height - player.y == (screenheight / tilesize) / 2 && player.direction == down){
+    else if(height - player.y == (SCREENHEIGHT / TILESIZE) / 2 && player.direction == down){
       renderStill(offsetx, offsety);
     }
     
-    else if(width + offsetx == (screenwidth / tilesize) && (player.direction == right || player.direction == left)){
+    else if(width + offsetx == (SCREENWIDTH / TILESIZE) && (player.direction == right || player.direction == left)){
         render(offsetx, offsety);
     }
-    else if(height + offsety == (screenwidth / tilesize) && (player.direction == down || player.direction == up)){
+    else if(height + offsety == (SCREENWIDTH / TILESIZE) && (player.direction == down || player.direction == up)){
       render(offsetx, offsety);
     }
     
@@ -388,7 +410,7 @@ class Map{
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
         if(tiles[i][j] != null){
-          tiles[i][j].render((i + x + tempx) * tilesize - (player.frame * tempx), (j + y + tempy) * tilesize - (player.frame * tempy));
+          tiles[i][j].render((i + x + tempx) * TILESIZE - (player.frame * tempx), (j + y + tempy) * TILESIZE - (player.frame * tempy));
         }
       }
     }
@@ -399,7 +421,7 @@ class Map{
           if(entities[i][j] instanceof Player)
             entities[i][j].renderStill(x, y);
           else{
-            entities[i][j].render((x + tempx) * tilesize - (player.frame * tempx), (y + tempy) * tilesize - (player.frame * tempy));
+            entities[i][j].render((x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
           }
         }
       }
@@ -408,7 +430,7 @@ class Map{
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
         if(tiles[i][j] != null && isRenderingFog){
-            tiles[i][j].renderFog((i + x + tempx) * tilesize - (player.frame * tempx), (j + y + tempy) * tilesize - (player.frame * tempy));
+            tiles[i][j].renderFog((i + x + tempx) * TILESIZE, (j + y + tempy) * TILESIZE);
         }
       }
     }
@@ -459,7 +481,7 @@ class Dungeon{
   void process(){
     boolean enemyturn = false;
     if(map.player.input(map)){
-      //map.calcFog();
+      map.calcFog();
       enemyturn = true;
       map.tiles[map.player.x][map.player.y].onstep(map);
       
@@ -508,7 +530,7 @@ class Tile{
   //tile type
   //trap? activated?
   boolean canmove;
-  int fog;
+  int light;
   
   Tile(){
     canmove = true;
@@ -523,22 +545,22 @@ class Tile{
   }
   
   void renderTile(int x, int y){
-    render(x * tilesize, y * tilesize);
+    render(x * TILESIZE, y * TILESIZE);
   }
   
   void render(int x, int y){
     fill(192);
-    rect(x, y, tilesize, tilesize);
+    rect(x, y, TILESIZE, TILESIZE);
   }
 
   void renderTileFog(int x, int y){
-    renderFog(x * tilesize, y * tilesize);
+    renderFog(x * TILESIZE, y * TILESIZE);
   }
 
   void renderFog(int x, int y){
     noStroke();
-    fill(0, 255 - (fog * 32));
-    rect(x, y, tilesize, tilesize);
+    fill(0, 127 + (light * 16));
+    rect(x, y, TILESIZE, TILESIZE);
     stroke(0);
   }
 }
@@ -554,7 +576,7 @@ class Wall extends Tile{
   
   void render(int x, int y){
     fill(128, 128);
-    rect(x, y, tilesize, tilesize);
+    rect(x, y, TILESIZE, TILESIZE);
   }
 }
 
@@ -565,7 +587,7 @@ class Stair extends Tile{
   
   void render(int x, int y){
     fill(255, 255, 0);
-    rect(x, y, tilesize, tilesize);
+    rect(x, y, TILESIZE, TILESIZE);
   }
 }
 
@@ -587,6 +609,6 @@ class Door extends Tile{
       fill(255);
     else
       fill(128, 96, 64);
-    rect(x, y, tilesize, tilesize);
+    rect(x, y, TILESIZE, TILESIZE);
   }
 }

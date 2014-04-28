@@ -130,25 +130,25 @@ class Ghost extends Enemy{
     
     if(frame < 24){
       fill(32);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, tilesize);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, TILESIZE);
       
       fill(255, 255, 255);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, tilesize, 6);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
       
       fill(0, 255, 0);
-      rect((x - tempx) * tilesize + (frame * tempx) + a, (y - tempy) * tilesize + (frame * tempy) + b, (healthpercent) * tilesize, 6);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, (healthpercent) * TILESIZE, 6);
       
       frame += 4;
     }
     else{
       fill(32);
-      rect(x * tilesize + a, y * tilesize + b, tilesize, tilesize);
+      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, TILESIZE);
       
       fill(255, 255, 255);
-      rect(x * tilesize + a, y * tilesize + b, tilesize, 6);
+      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, 6);
       
       fill(0, 255, 0);
-      rect(x * tilesize + a, y * tilesize + b, (healthpercent) * tilesize, 6);
+      rect(x * TILESIZE + a, y * TILESIZE + b, (healthpercent) * TILESIZE, 6);
     }
   }
 }
