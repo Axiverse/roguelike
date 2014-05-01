@@ -1,6 +1,7 @@
 abstract class Entity{
   int x, y;
   int direction;
+  int nextTurn;
   
   int light;
   int frame;
@@ -31,6 +32,10 @@ abstract class Entity{
   }
   
   abstract void renderStill(int a, int b);
+  
+  void findNextTurn(Map map){
+    nextTurn = -1;
+  }
   
   void render(int a, int b){
     int tempx, tempy;
@@ -229,7 +234,21 @@ abstract class Creature extends Entity{
           }
         }
         else{
-          opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 100;
+          opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 100;
+        }
+      }
+      
+      if(opennodes[lowx - 1][lowy] == -1 && closenodes[lowx - 1][lowy] == 0 && map.tiles[lowx - 1][lowy] != null){
+        if(map.tiles[lowx - 1][lowy].canmove){
+          if(map.entities[lowx - 1][lowy] == null){
+            opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 1;
+          }
+          else{
+            //opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 5;
+          }
+        }
+        else{
+          opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 100;
         }
       }
       
@@ -427,6 +446,10 @@ class Enemy extends Creature{
   
   void suggest(Enemy enemy, int suggestion){
     enemy.suggestion = suggestion;
+  }
+  
+  void findNextTurn(Map map){
+    
   }
   
   boolean turn(Map map){

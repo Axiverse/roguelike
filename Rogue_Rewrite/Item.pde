@@ -1,17 +1,33 @@
-abstract class Item{
+abstract class Item extends Entity{
   int quantity;
   int quality;
   //Icon
+  
+  Item(){
+    this(0,0);
+  }
+  
+  Item(int x, int y){
+    this.x = x;
+    this.y = y;
+    light = 0;
+  }
+  
   abstract void activate(Dungeon dungeon);
   
-  void render(int x, int y){
+  void renderTile(int a, int b){
     //Some stuff here?
+    //do the offset thing
     fill(255);
-    rect(x, y, TILESIZE + 4, TILESIZE + 4);
+    rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, TILESIZE);
   }
 }
 
 class Tool extends Item{
+  void renderStill(int a, int b){
+    
+  }
+  
   void activate(Dungeon dungeon){
     return;
   }

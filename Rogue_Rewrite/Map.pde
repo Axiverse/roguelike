@@ -292,7 +292,7 @@ class Map{
         if(entities[i][j] != null && entities[i][j].light > 0){
           for(int a = -1 * entities[i][j].light; a < entities[i][j].light; a ++){
             for(int b = -1 * entities[i][j].light; b < entities[i][j].light; b ++){
-              if(i + a > 0 && j + b > 0 && i + a < width && j + b < height && sqrt(pow(a, 2) + pow(b, 2)) < MAXLIGHT){
+              if(i + a > 0 && j + b > 0 && i + a < width && j + b < height && sqrt(pow(a, 2) + pow(b, 2)) <= MAXLIGHT){
                 if(tiles[i + a][j + b] != null && entities[i][j].light > 0)
                   tiles[i + a][j + b].light -= MAXLIGHT - sqrt(pow(a, 2) + pow(b, 2));
               }
@@ -563,6 +563,7 @@ class Tile{
     rect(x, y, TILESIZE, TILESIZE);
     stroke(0);
   }
+
 }
 
 class Floor extends Tile{
@@ -575,7 +576,7 @@ class Wall extends Tile{
   }
   
   void render(int x, int y){
-    fill(128, 128);
+    fill(128);
     rect(x, y, TILESIZE, TILESIZE);
   }
 }
