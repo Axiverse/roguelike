@@ -3,10 +3,15 @@ final int SCREENHEIGHT = 480;
 
 final int TILESIZE = 24;
 
-final int up = 1;
-final int left = 2;
-final int down = 3;
-final int right = 4;
+final int MOVE_UP = 1;
+final int MOVE_LEFT = 2;
+final int MOVE_DOWN = 3;
+final int MOVE_RIGHT = 4;
+
+final int ATK_UP = 5;
+final int ATK_LEFT = 6;
+final int ATK_DOWN = 7;
+final int ATK_RIGHT = 8;
 
 final int MAXLIGHT = 8;
 

@@ -39,16 +39,16 @@ class Weapond extends Tool{
   void activate(Dungeon dungeon){
     Player temp = dungeon.map.player;//I'm too lazy to type this out again
     switch(temp.direction){
-      case up:
+      case MOVE_UP:
         
       break;
-      case left:
+      case MOVE_LEFT:
       
       break;
-      case down:
+      case MOVE_DOWN:
       
       break;
-      case right:
+      case MOVE_RIGHT:
       
       break;
     }

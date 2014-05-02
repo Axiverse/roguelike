@@ -352,31 +352,31 @@ class Map{
     }
       //render(offsetx, offsety);
     */
-    if(player.x == (SCREENWIDTH / TILESIZE) / 2 && player.direction == left){
+    if(player.x == (SCREENWIDTH / TILESIZE) / 2 && player.direction == MOVE_LEFT){
       renderStill(offsetx, offsety);
     }
-    else if(player.y == (SCREENHEIGHT / TILESIZE) / 2 && player.direction == up){
+    else if(player.y == (SCREENHEIGHT / TILESIZE) / 2 && player.direction == MOVE_UP){
       renderStill(offsetx, offsety);
     }
-    else if(width - player.x == (SCREENWIDTH / TILESIZE) / 2 && player.direction == right){
+    else if(width - player.x == (SCREENWIDTH / TILESIZE) / 2 && player.direction == MOVE_RIGHT){
       renderStill(offsetx, offsety);
     }
-    else if(height - player.y == (SCREENHEIGHT / TILESIZE) / 2 && player.direction == down){
+    else if(height - player.y == (SCREENHEIGHT / TILESIZE) / 2 && player.direction == MOVE_DOWN){
       renderStill(offsetx, offsety);
     }
     
-    else if(width + offsetx == (SCREENWIDTH / TILESIZE) && (player.direction == right || player.direction == left)){
+    else if(width + offsetx == (SCREENWIDTH / TILESIZE) && (player.direction == MOVE_RIGHT || player.direction == MOVE_LEFT)){
         render(offsetx, offsety);
     }
-    else if(height + offsety == (SCREENWIDTH / TILESIZE) && (player.direction == down || player.direction == up)){
+    else if(height + offsety == (SCREENWIDTH / TILESIZE) && (player.direction == MOVE_DOWN || player.direction == MOVE_UP)){
       render(offsetx, offsety);
     }
     
-    else if(offsetx == 0 && (player.direction == left || player.direction == right)){
+    else if(offsetx == 0 && (player.direction == MOVE_LEFT || player.direction == MOVE_RIGHT)){
       render(offsetx, offsety);
     }
     
-    else if(offsety == 0 && (player.direction == up || player.direction == down)){
+    else if(offsety == 0 && (player.direction == MOVE_UP || player.direction == MOVE_DOWN)){
       render(offsetx, offsety);
     }
     

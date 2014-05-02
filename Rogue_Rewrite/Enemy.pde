@@ -89,21 +89,21 @@ class Ghost extends Enemy{
     if(astar(map, map.player.x, map.player.y)){
       if(map.player.x == this.x){
         if(map.player.y == this.y + 1){
-          attack(down, map);
+          attack(MOVE_DOWN, map);
           return true;
         }
         if(map.player.y == this.y - 1){
-          attack(up, map);
+          attack(MOVE_UP, map);
           return true;
         }
       }
       if(map.player.y == this.y){
         if(map.player.x == this.x + 1){
-          attack(right, map);
+          attack(MOVE_RIGHT, map);
           return true;
         }
         if(map.player.x == this.x - 1){
-          attack(left, map);
+          attack(MOVE_LEFT, map);
           return true;
         }
       }

@@ -308,21 +308,21 @@ abstract class Creature extends Entity{
       if(previous == 1){
         if(findx == this.x){
           if(findy == this.y + 1){
-            move(down, map);
+            move(MOVE_DOWN, map);
             break;
           }
           if(findy == this.y - 1){
-            move(up, map);
+            move(MOVE_UP, map);
             break;
           }
         }
         if(findy == this.y){
           if(findx == this.x + 1){
-            move(right, map);
+            move(MOVE_RIGHT, map);
             break;
           }
           if(findx == this.x - 1){
-            move(left, map);
+            move(MOVE_LEFT, map);
             break;
           }
         }
@@ -334,7 +334,7 @@ abstract class Creature extends Entity{
   
   boolean move(int direction, Map map){
     switch(direction){
-      case up:
+      case MOVE_UP:
         if(y > 0 && map.tiles[x][y - 1] != null && map.entities[x][y - 1] == null && map.tiles[x][y - 1].canmove){
           map.entities[x][y] = null;
           y --;
@@ -344,7 +344,7 @@ abstract class Creature extends Entity{
           return true;
         }
       break;
-      case left:
+      case MOVE_LEFT:
         if(x > 0 && map.tiles[x - 1][y] != null && map.entities[x - 1][y] == null && map.tiles[x - 1][y].canmove){
           map.entities[x][y] = null;
           x --;
@@ -354,7 +354,7 @@ abstract class Creature extends Entity{
           return true;
         }
       break;
-      case down:
+      case MOVE_DOWN:
         if(y < map.height - 1 && map.tiles[x][y + 1] != null && map.entities[x][y + 1] == null && map.tiles[x][y + 1].canmove){
           map.entities[x][y] = null;
           y ++;
@@ -364,7 +364,7 @@ abstract class Creature extends Entity{
           return true;
         }
       break;
-      case right:
+      case MOVE_RIGHT:
         if(x < map.width - 1 && map.tiles[x + 1][y] != null && map.entities[x + 1][y] == null && map.tiles[x + 1][y].canmove){
           map.entities[x][y] = null;
           x ++;
@@ -382,7 +382,7 @@ abstract class Creature extends Entity{
     
     int damage = 1;
     switch(direction){
-      case up:
+      case MOVE_UP:
         if(y > 0 && map.entities[x][y - 1] != null){
           if(!(map.entities[x][y - 1] instanceof Creature))
             return false;
@@ -394,7 +394,7 @@ abstract class Creature extends Entity{
           return true;
         }
       break;
-      case left:
+      case MOVE_LEFT:
         if(x > 0 && map.entities[x - 1][y] != null){
           if(!(map.entities[x - 1][y] instanceof Creature))
             return false;
@@ -406,7 +406,7 @@ abstract class Creature extends Entity{
           return true;
         }
       break;
-      case down:
+      case MOVE_DOWN:
         if(y < map.height - 1 && map.entities[x][y + 1] != null){
           if(!(map.entities[x][y + 1] instanceof Creature))
             return false;
@@ -418,7 +418,7 @@ abstract class Creature extends Entity{
           return true;
         }
       break;
-      case right:
+      case MOVE_RIGHT:
         if(x < map.width - 1 && map.entities[x + 1][y] != null){
           if(!(map.entities[x + 1][y] instanceof Creature))
             return false;
@@ -456,21 +456,21 @@ class Enemy extends Creature{
     if(astar(map, map.player.x, map.player.y)){
       if(map.player.x == this.x){
         if(map.player.y == this.y + 1){
-          attack(down, map);
+          attack(MOVE_DOWN, map);
           return true;
         }
         if(map.player.y == this.y - 1){
-          attack(up, map);
+          attack(MOVE_UP, map);
           return true;
         }
       }
       if(map.player.y == this.y){
         if(map.player.x == this.x + 1){
-          attack(right, map);
+          attack(MOVE_RIGHT, map);
           return true;
         }
         if(map.player.x == this.x - 1){
-          attack(left, map);
+          attack(MOVE_LEFT, map);
           return true;
         }
       }
@@ -480,19 +480,19 @@ class Enemy extends Creature{
   
   void run(Map map){
     if(x < map.player.x - 1){
-      move(left, map);
+      move(MOVE_LEFT, map);
       return;
     }
     if(x > map.player.x + 1){
-      move(right, map);
+      move(MOVE_RIGHT, map);
       return;
     }
     if(y < map.player.y - 1){
-      move(up, map);
+      move(MOVE_UP, map);
       return;
     }
     if(y > map.player.y + 1){
-      move(down, map);
+      move(MOVE_DOWN, map);
       return;
     }
   }
