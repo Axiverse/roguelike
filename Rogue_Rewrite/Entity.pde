@@ -425,7 +425,7 @@ abstract class Creature extends Entity{
           ((Creature)map.entities[x + 1][y]).health -= damage;
           ((Creature)map.entities[x + 1][y]).calculatehealth();
           //if(map.entities[x + 1][y].health <= 0){
-            map.entities[x + 1][y] = null;
+            //map.entities[x + 1][y] = null;
           //}
           return true;
         }

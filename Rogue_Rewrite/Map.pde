@@ -294,7 +294,7 @@ class Map{
             for(int b = -1 * entities[i][j].light; b < entities[i][j].light; b ++){
               if(i + a > 0 && j + b > 0 && i + a < width && j + b < height && sqrt(pow(a, 2) + pow(b, 2)) <= MAXLIGHT){
                 if(tiles[i + a][j + b] != null && entities[i][j].light > 0)
-                  tiles[i + a][j + b].light -= MAXLIGHT - sqrt(pow(a, 2) + pow(b, 2));
+                  tiles[i + a][j + b].light += MAXLIGHT - sqrt(pow(a, 2) + pow(b, 2));
               }
             }
           }
@@ -430,7 +430,7 @@ class Map{
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
         if(tiles[i][j] != null && isRenderingFog){
-            tiles[i][j].renderFog((i + x + tempx) * TILESIZE, (j + y + tempy) * TILESIZE);
+            tiles[i][j].renderFog((i + x + tempx) * TILESIZE - (player.frame * tempx), (j + y + tempy) * TILESIZE - (player.frame * tempy));
         }
       }
     }
@@ -558,10 +558,10 @@ class Tile{
   }
 
   void renderFog(int x, int y){
-    noStroke();
-    fill(0, 127 + (light * 16));
+    //noStroke();
+    fill(0, 224 - (light * 28));
     rect(x, y, TILESIZE, TILESIZE);
-    stroke(0);
+    //stroke(0);
   }
 
 }

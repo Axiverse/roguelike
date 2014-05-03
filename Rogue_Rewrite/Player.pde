@@ -19,8 +19,7 @@ class Player extends Creature{
   boolean input(Map map){
     if(frame < 24)
       return false;
-    
-    map.calcFog();
+
     //Movement in 4 directions
     if(keyboard.timedpress(UP, 100) && !keyboard.keys[DOWN]){
       if(!attack(MOVE_UP, map)){
@@ -29,6 +28,7 @@ class Player extends Creature{
             direction = MOVE_UP;
             return true;
           }
+          return false;
         }
         return true;
       }
@@ -36,33 +36,47 @@ class Player extends Creature{
     }
     else if(keyboard.timedpress(LEFT, 100) && !keyboard.keys[RIGHT]){
       if(!attack(MOVE_LEFT, map)){
-        if(!move(MOVE_LEFT, map) && direction != MOVE_LEFT){
-          direction = MOVE_LEFT;
-          return true;
+        if(!move(MOVE_LEFT, map)){
+          if(direction != MOVE_LEFT){
+            direction = MOVE_LEFT;
+            return true;
+          }
+          return false;
         }
+        return true;
       }
       return true;
     }
     else if(keyboard.timedpress(DOWN, 100) && !keyboard.keys[UP]){
       if(!attack(MOVE_DOWN, map)){
-        if(!move(MOVE_DOWN, map) && direction != MOVE_DOWN){
-          direction = MOVE_DOWN;
-          return true;
+        if(!move(MOVE_DOWN, map)){
+          if(direction != MOVE_DOWN){
+            direction = MOVE_DOWN;
+            return true;
+          }
+          return false;
         }
+        return true;
       }
       return true;
     }
     else if(keyboard.timedpress(RIGHT, 100) && !keyboard.keys[LEFT]){
       if(!attack(MOVE_RIGHT, map)){
-        if(!move(MOVE_RIGHT, map) && direction!= MOVE_RIGHT){
-          direction = MOVE_RIGHT;
-          return true;
+        if(!move(MOVE_RIGHT, map)){
+          if(direction!= MOVE_RIGHT){
+            direction = MOVE_RIGHT;
+            return true;
+          }
+          return false;
         }
+        return true;
       }
       return true;
     }
     
     //Other buttons
+    
+    //attacking
     else if(keyboard.cantoggle[122] && keyboard.timedpress(122, 100)){
       switch(direction){
         case MOVE_UP:
