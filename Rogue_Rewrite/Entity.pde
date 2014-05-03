@@ -165,7 +165,7 @@ abstract class Creature extends Entity{
       for(int i = 1; i < map.width - 1; i ++){
         for(int j = 1; j < map.height - 1; j ++){
           //(opennodes[i][j] + sqrt(pow(i - goalx, 2) + pow(j - goaly, 2)))
-          if(opennodes[i][j] != -1 && (opennodes[i][j] + abs(i - goalx) + abs(j - goaly) ) < lowvalue){//Moving 100+ spaces is just ridiculous
+          if(opennodes[i][j] != -1) < lowvalue){//Moving 100+ spaces is just ridiculous
             lowx = i;
             lowy = j;
             lowvalue = (opennodes[i][j] + abs(i - goalx) + abs(j - goaly) );
@@ -175,55 +175,6 @@ abstract class Creature extends Entity{
       //print("x: " + lowx + "\n");
       //print("y: " + lowy + "\n");
       
-      /*
-      if(opennodes[lowx][lowy - 1] == -1  && closenodes[lowx][lowy - 1] == 0 && map.tiles[lowx][lowy - 1] != null){
-        if(map.tiles[lowx][lowy - 1].canmove){
-          if(map.entities[lowx][lowy - 1] == null)
-            opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 1;
-          else
-            opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 5;
-        }
-        else{
-          opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 100;
-        }
-      }
-      
-      if(opennodes[lowx - 1][lowy] == -1  && closenodes[lowx - 1][lowy] == 0 && map.tiles[lowx - 1][lowy] != null){
-        if(map.tiles[lowx - 1][lowy].canmove){
-          if(map.entities[lowx - 1][lowy] == null)
-            opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 1;
-          else
-            opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 5;
-        }
-        else{
-          opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 100;
-        }
-      }
-      
-      if(opennodes[lowx][lowy + 1] == -1  && closenodes[lowx][lowy + 1] == 0 && map.tiles[lowx][lowy + 1] != null){
-        if(map.tiles[lowx][lowy + 1].canmove){
-          if(map.entities[lowx][lowy + 1] == null)
-            opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 1;
-          else
-            opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 5;
-        }
-        else{
-          opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 100;
-        }
-      }
-      
-      if(opennodes[lowx + 1][lowy] == -1  && closenodes[lowx + 1][lowy] == 0 && map.tiles[lowx + 1][lowy] != null){
-        if(map.tiles[lowx + 1][lowy].canmove){
-          if(map.entities[lowx + 1][lowy] == null)
-            opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 1;
-          else
-            opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 5;
-        }
-        else{
-          opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 100;
-        }
-      }
-      */
       if(opennodes[lowx][lowy - 1] == -1 && closenodes[lowx][lowy - 1] == 0 && map.tiles[lowx][lowy - 1] != null){
         if(map.tiles[lowx][lowy - 1].canmove){
           if(map.entities[lowx][lowy - 1] == null){
@@ -244,22 +195,42 @@ abstract class Creature extends Entity{
             opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 1;
           }
           else{
-            //opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 5;
+            //opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 5;
           }
         }
         else{
           opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 100;
         }
       }
+        
+      if(opennodes[lowx][lowy + 1] == -1 && closenodes[lowx][lowy + 1] == 0 && map.tiles[lowx][lowy + 1] != null){
+        if(map.tiles[lowx][lowy + 1].canmove){
+          if(map.entities[lowx][lowy + 1] == null){
+            opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 1;
+          }
+          else{
+            //opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 5;
+          }
+        }
+        else{
+          opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 100;
+        }
+      }
       
-      if(map.tiles[lowx - 1][lowy] != null && map.tiles[lowx - 1][lowy].canmove && opennodes[lowx - 1][lowy] == -1 && closenodes[lowx - 1][lowy] == 0)
-        opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 1;
-        
-      if(map.tiles[lowx][lowy + 1] != null && map.tiles[lowx][lowy + 1].canmove && opennodes[lowx][lowy + 1] == -1 && closenodes[lowx][lowy + 1] == 0)
-        opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 1;
-        
-      if(map.tiles[lowx + 1][lowy] != null && map.tiles[lowx + 1][lowy].canmove && opennodes[lowx + 1][lowy] == -1 && closenodes[lowx + 1][lowy] == 0)
-        opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 1;
+      if(opennodes[lowx + 1][lowy] == -1 && closenodes[lowx + 1][lowy] == 0 && map.tiles[lowx + 1][lowy] != null){
+        if(map.tiles[lowx + 1][lowy].canmove){
+          if(map.entities[lowx + 1][lowy] == null){
+            opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 1;
+          }
+          else{
+            //opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 5;
+          }
+        }
+        else{
+          opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 100;
+        }
+      }
+
         
       closenodes[lowx][lowy] = opennodes[lowx][lowy];
       opennodes[lowx][lowy] = -1;
