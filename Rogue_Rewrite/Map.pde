@@ -11,7 +11,7 @@ class Map{
   boolean isRenderingFog;
   
   Map(int w, int h){
-    isRenderingFog = false;
+    isRenderingFog = true;
     floorup = false;
     this.width = w;
     this.height = h;
@@ -101,7 +101,7 @@ class Map{
         
       }
       
-      if(enemycount > 20)
+      if(enemycount > 5)
         break;
     }
   }
@@ -558,10 +558,10 @@ class Tile{
   }
 
   void renderFog(int x, int y){
-    noStroke();
-    fill(0, 256 - (light * 32));
+    //noStroke();
+    fill(0, 224 - (light * 28));
     rect(x, y, TILESIZE, TILESIZE);
-    stroke(0);
+    //stroke(0);
   }
 
 }
@@ -576,7 +576,7 @@ class Wall extends Tile{
   }
   
   void render(int x, int y){
-    fill(128, 128, 255);
+    fill(128);
     rect(x, y, TILESIZE, TILESIZE);
   }
 }
