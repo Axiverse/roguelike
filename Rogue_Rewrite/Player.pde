@@ -104,7 +104,12 @@ class Player extends Creature{
     return false;
   }
   
-  void renderStill(int a, int b){
+  void renderImage(int x, int y){
+    fill(255, 0, 0);
+    rect(x, y, TILESIZE, TILESIZE);
+  }
+  
+    void renderStill(int a, int b){
       //this.frame = 24;
       fill(255, 0, 0);
       rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, TILESIZE);
@@ -134,8 +139,7 @@ class Player extends Creature{
     }
     
     if(frame < 24){
-      fill(255, 0, 0);
-      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, TILESIZE);
+      renderImage((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b);
       
       fill(255, 255, 255);
       rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
@@ -146,8 +150,7 @@ class Player extends Creature{
       frame += 4;
     }
     else{
-      fill(255, 0, 0);
-      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, TILESIZE);
+      renderImage(x * TILESIZE + a, y * TILESIZE + b);
       
       fill(255, 255, 255);
       rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, 6);
@@ -157,4 +160,5 @@ class Player extends Creature{
     }
 
   }
+  
 }

@@ -26,7 +26,9 @@ class Map{
     entities = new Entity[width][height];
     actors = new ArrayList();
     
-    generate();
+    //generate();
+    clear();
+    tiles[20][20] = new Wall();
     
     player = new Player(int(width/2), int(height/2));
     addentity(player);
@@ -51,7 +53,8 @@ class Map{
   
   Map(int w, int h, Player player){
     this(w, h);
-    generate();
+    //generate();
+    clear();
     this.player = player;
     
     while(!(tiles[player.x][player.y] != null && tiles[player.x][player.y] instanceof Floor)){
@@ -82,6 +85,63 @@ class Map{
     spawnstuff();
     
     calcFog();
+  }
+  
+  boolean canSee(int x1, int y1, int x2, int y2){
+    /*
+    boolean swap = false;
+    if(abs(y2 - y1) > abs(x2 - x1)){
+      swap = true;
+      //switch x1 and y1
+      int temp = x1;
+      x1 = y1;
+      y1 = temp;
+      
+      temp = x2;
+      x2 = y2;
+      y2 = temp;
+    }
+    
+    if(x2 - x1 < 0){
+      int temp = x1;
+      x1 = x2;
+      x2 = temp;
+      
+      temp = y1;
+      y1 = y2;
+      y1 = temp;
+    }
+    
+    int x;
+    int y = y1;
+    int error = 0;
+    int deltay = y2 - y1;
+    int deltax = x2 - x1;
+    int threshold = (int)((float) deltay / 2.0);
+    
+    for(x = x1; x < x2; x ++){
+      if(swap){
+        if(tiles[y][x] != null && tiles[y][x].canmove)
+          return false;
+      }
+      else{
+        if(tiles[x][y] != null && tiles[x][y].canmove)
+          return false;
+      }
+      error += deltay;
+      if(deltay < 0){
+        if(error < -threshold){
+          error += deltax;
+          y --;
+        }
+      }
+      else if(error > threshold){
+        error -= deltax;
+        y ++;
+      }
+    }
+    */
+    return true;
   }
   
   void spawnstuff(){
@@ -292,7 +352,7 @@ class Map{
         if(entities[i][j] != null && entities[i][j].light > 0){
           for(int a = -1 * entities[i][j].light; a < entities[i][j].light; a ++){
             for(int b = -1 * entities[i][j].light; b < entities[i][j].light; b ++){
-              if(i + a > 0 && j + b > 0 && i + a < width && j + b < height && sqrt(pow(a, 2) + pow(b, 2)) <= MAXLIGHT){
+              if(i + a >= 0 && j + b >= 0 && i + a < width && j + b < height/* && sqrt(pow(a, 2) + pow(b, 2)) <= MAXLIGHT */&& canSee(player.x, player.y, i + a, i + b)){
                 if(tiles[i + a][j + b] != null && entities[i][j].light > 0)
                   tiles[i + a][j + b].light += MAXLIGHT - sqrt(pow(a, 2) + pow(b, 2));
               }
@@ -301,28 +361,6 @@ class Map{
         }
       }
     }
-    /*
-    for(int i = 0; i < SCREENWIDTH / TILESIZE; i ++){
-      for(int j = 0; j < SCREENHEIGHT / TILESIZE; j ++){
-        int tempx = i - offsetx;
-        int tempy = j - offsety;
-        
-        //Pray to God that this works
-        if(sqrt(pow(tempx - player.x, 2) + pow(tempy - player.y, 2)) <= 8){
-          
-          //Rereading the Bible
-          if(tiles[tempx][tempy] != null)
-            tiles[tempx][tempy].fog = 8 - (int)sqrt(pow(tempx - player.x, 2) + pow(tempy - player.y, 2));
-          
-        }
-        else{
-          //tithing
-          if(tiles[tempx][tempy] != null)
-            tiles[tempx][tempy].fog = 0;
-        }
-      }
-    }
-    */
   }
   
   
@@ -558,10 +596,10 @@ class Tile{
   }
 
   void renderFog(int x, int y){
-    //noStroke();
-    fill(0, 224 - (light * 28));
+    noStroke();
+    fill(0, 256 - (light * 32));
     rect(x, y, TILESIZE, TILESIZE);
-    //stroke(0);
+    stroke(0);
   }
 
 }
@@ -576,7 +614,7 @@ class Wall extends Tile{
   }
   
   void render(int x, int y){
-    fill(128);
+    fill(64, 64, 128);
     rect(x, y, TILESIZE, TILESIZE);
   }
 }

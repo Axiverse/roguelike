@@ -37,6 +37,11 @@ abstract class Entity{
     nextTurn = -1;
   }
   
+  void renderImage(int x, int y){
+    fill(0, 255, 255);
+    rect(x, y, TILESIZE, TILESIZE);
+  }
+  
   void render(int a, int b){
     int tempx, tempy;
     if(direction % 2 == 1){//Vertical directions
@@ -56,31 +61,13 @@ abstract class Entity{
     
     if(frame < 24){
       //Square
-      fill(0, 255, 255);
-      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, TILESIZE);
-      
-      /*
-      //Health bar background
-      fill(255, 255, 255);
-      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
-      
-      //Health bar front
-      fill(0, 255, 0);
-      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, (healthpercent) * TILESIZE, 6);
-      */
+      renderImage((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b);
       
       frame += 4;
     }
     else{
       fill(0, 255, 255);
-      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, TILESIZE);
-      /*
-      fill(255, 255, 255);
-      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, 6);
-      
-      fill(0, 255, 0);
-      rect(x * TILESIZE + a, y * TILESIZE + b, (healthpercent) * TILESIZE, 6);
-      */
+      renderImage(x * TILESIZE + a, y * TILESIZE + b);
     }
   }
   
@@ -165,7 +152,7 @@ abstract class Creature extends Entity{
       for(int i = 1; i < map.width - 1; i ++){
         for(int j = 1; j < map.height - 1; j ++){
           //(opennodes[i][j] + sqrt(pow(i - goalx, 2) + pow(j - goaly, 2)))
-          if(opennodes[i][j] != -1 && (opennodes[i][j] + abs(i - goalx) + abs(j - goaly) ) < lowvalue){//Moving 100+ spaces is just ridiculous
+          if(opennodes[i][j] != -1/* && (opennodes[i][j] + abs(i - goalx) + abs(j - goaly) ) < lowvalue*/){//Moving 100+ spaces is just ridiculous
             lowx = i;
             lowy = j;
             lowvalue = (opennodes[i][j] + abs(i - goalx) + abs(j - goaly) );
@@ -176,54 +163,48 @@ abstract class Creature extends Entity{
       //print("y: " + lowy + "\n");
       
       /*
-      if(opennodes[lowx][lowy - 1] == -1  && closenodes[lowx][lowy - 1] == 0 && map.tiles[lowx][lowy - 1] != null){
-        if(map.tiles[lowx][lowy - 1].canmove){
-          if(map.entities[lowx][lowy - 1] == null)
-            opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 1;
-          else
-            opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 5;
-        }
-        else{
-          opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 100;
-        }
-      }
-      
       if(opennodes[lowx - 1][lowy] == -1  && closenodes[lowx - 1][lowy] == 0 && map.tiles[lowx - 1][lowy] != null){
         if(map.tiles[lowx - 1][lowy].canmove){
-          if(map.entities[lowx - 1][lowy] == null)
+          if(map.entities[lowx - 1][lowy] == null){
             opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 1;
-          else
-            opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 5;
+          }
+          else{
+            //opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 5;
+          }
         }
         else{
-          opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 100;
+          //opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 100;
         }
       }
       
       if(opennodes[lowx][lowy + 1] == -1  && closenodes[lowx][lowy + 1] == 0 && map.tiles[lowx][lowy + 1] != null){
         if(map.tiles[lowx][lowy + 1].canmove){
-          if(map.entities[lowx][lowy + 1] == null)
+          if(map.entities[lowx][lowy + 1] == null){
             opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 1;
-          else
-            opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 5;
+          }
+          else{
+            //opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 5;
+          }
         }
         else{
-          opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 100;
+          //opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 100;
         }
       }
       
       if(opennodes[lowx + 1][lowy] == -1  && closenodes[lowx + 1][lowy] == 0 && map.tiles[lowx + 1][lowy] != null){
         if(map.tiles[lowx + 1][lowy].canmove){
-          if(map.entities[lowx + 1][lowy] == null)
+          if(map.entities[lowx + 1][lowy] == null){
             opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 1;
-          else
-            opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 5;
+          }
+          else{
+            //opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 5;
+          }
         }
         else{
-          opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 100;
+          //opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 100;
         }
       }
-      */
+      
       if(opennodes[lowx][lowy - 1] == -1 && closenodes[lowx][lowy - 1] == 0 && map.tiles[lowx][lowy - 1] != null){
         if(map.tiles[lowx][lowy - 1].canmove){
           if(map.entities[lowx][lowy - 1] == null){
@@ -234,33 +215,25 @@ abstract class Creature extends Entity{
           }
         }
         else{
-          opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 100;
+          //opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 100;
         }
       }
+      */
       
-      if(opennodes[lowx - 1][lowy] == -1 && closenodes[lowx - 1][lowy] == 0 && map.tiles[lowx - 1][lowy] != null){
-        if(map.tiles[lowx - 1][lowy].canmove){
-          if(map.entities[lowx - 1][lowy] == null){
-            opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 1;
-          }
-          else{
-            //opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 5;
-          }
-        }
-        else{
-          opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 100;
-        }
-      }
+      if(opennodes[lowx][lowy - 1] == -1 && closenodes[lowx][lowy - 1] == 0 && map.tiles[lowx][lowy - 1] != null && map.tiles[lowx][lowy - 1].canmove)
+        opennodes[lowx][lowy - 1] = opennodes[lowx][lowy] + 1;
       
-      if(map.tiles[lowx - 1][lowy] != null && map.tiles[lowx - 1][lowy].canmove && opennodes[lowx - 1][lowy] == -1 && closenodes[lowx - 1][lowy] == 0)
+      if(opennodes[lowx - 1][lowy] == -1 && closenodes[lowx - 1][lowy] == 0 && map.tiles[lowx - 1][lowy] != null && map.tiles[lowx - 1][lowy].canmove)
         opennodes[lowx - 1][lowy] = opennodes[lowx][lowy] + 1;
         
-      if(map.tiles[lowx][lowy + 1] != null && map.tiles[lowx][lowy + 1].canmove && opennodes[lowx][lowy + 1] == -1 && closenodes[lowx][lowy + 1] == 0)
+      if(opennodes[lowx][lowy + 1] == -1 && closenodes[lowx][lowy + 1] == 0 && map.tiles[lowx][lowy + 1] != null && map.tiles[lowx][lowy + 1].canmove)
         opennodes[lowx][lowy + 1] = opennodes[lowx][lowy] + 1;
         
-      if(map.tiles[lowx + 1][lowy] != null && map.tiles[lowx + 1][lowy].canmove && opennodes[lowx + 1][lowy] == -1 && closenodes[lowx + 1][lowy] == 0)
+      if(opennodes[lowx + 1][lowy] == -1 && closenodes[lowx + 1][lowy] == 0 && map.tiles[lowx + 1][lowy] != null && map.tiles[lowx + 1][lowy].canmove)
         opennodes[lowx + 1][lowy] = opennodes[lowx][lowy] + 1;
+      
         
+      
       closenodes[lowx][lowy] = opennodes[lowx][lowy];
       opennodes[lowx][lowy] = -1;
       lowvalue = 100;
@@ -274,6 +247,7 @@ abstract class Creature extends Entity{
     int findx = goalx;
     int findy = goaly;
     int previous = closenodes[goalx][goaly];
+    
     /*
     print("\n");
     for(int j = 0; j < map.width - 1; j ++){
@@ -438,6 +412,60 @@ abstract class Creature extends Entity{
     healthpercent = (float) health / maxHealth;
   }
   
+  void render(int a, int b){
+    int tempx, tempy;
+    if(direction % 2 == 1){//Vertical directions
+      tempx = 0;
+      if(direction == 1)
+        tempy = -1;
+      else
+        tempy = 1;
+    }
+    else{
+      tempy = 0;
+      if(direction == 2)
+        tempx = -1;
+      else
+        tempx = 1;
+    }
+    
+    if(frame < 24){
+      //Square
+      renderImage((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b);
+      
+      fill(255, 255, 255);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
+      
+      fill(0, 255, 0);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, (healthpercent) * TILESIZE, 6);
+      
+      frame += 4;
+    }
+    else{
+      renderImage(x * TILESIZE + a, y * TILESIZE + b);
+            
+      fill(255, 255, 255);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
+      
+      fill(0, 255, 0);
+      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, (healthpercent) * TILESIZE, 6);
+    }
+  }
+  
+  void renderTile(int a, int b){
+    render(a * TILESIZE, b * TILESIZE);
+  }
+  
+  void renderStill(int a, int b){
+    renderImage(x * TILESIZE + a, y * TILESIZE + b);
+    
+    fill(255, 255, 255);
+    rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, 6);
+    
+    fill(0, 255, 0);
+    rect((x + a) * TILESIZE, (y + b) * TILESIZE, (healthpercent) * TILESIZE, 6);
+  }
+  
 }
 
 class Enemy extends Creature{
@@ -495,18 +523,6 @@ class Enemy extends Creature{
       move(MOVE_DOWN, map);
       return;
     }
-  }
-  
-  
-  void renderStill(int a, int b){
-    fill(0, 255, 255);
-    rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, TILESIZE);
-    
-    fill(255, 255, 255);
-    rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, 6);
-    
-    fill(0, 255, 0);
-    rect((x + a) * TILESIZE, (y + b) * TILESIZE, (healthpercent) * TILESIZE, 6);
   }
   
 }

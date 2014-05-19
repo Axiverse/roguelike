@@ -70,6 +70,11 @@ class Wolf extends Enemy{
     return false;
     */
   }
+  
+  void renderImage(int x, int y){
+    fill(0, 255, 255);
+    rect(x, y, TILESIZE, TILESIZE);
+  }
 }
 
 class Ghost extends Enemy{
@@ -111,44 +116,8 @@ class Ghost extends Enemy{
     return false;
   }
   
-  void render(int a, int b){
-    int tempx, tempy;
-    if(direction % 2 == 1){//Vertical directions
-      tempx = 0;
-      if(direction == 1)
-        tempy = -1;
-      else
-        tempy = 1;
-    }
-    else{
-      tempy = 0;
-      if(direction == 2)
-        tempx = -1;
-      else
-        tempx = 1;
-    }
-    
-    if(frame < 24){
-      fill(32);
-      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, TILESIZE);
-      
-      fill(255, 255, 255);
-      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
-      
-      fill(0, 255, 0);
-      rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, (healthpercent) * TILESIZE, 6);
-      
-      frame += 4;
-    }
-    else{
-      fill(32);
-      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, TILESIZE);
-      
-      fill(255, 255, 255);
-      rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, 6);
-      
-      fill(0, 255, 0);
-      rect(x * TILESIZE + a, y * TILESIZE + b, (healthpercent) * TILESIZE, 6);
-    }
+  void renderImage(int x, int y){
+    fill(0);
+    rect(x, y, TILESIZE, TILESIZE);
   }
 }
