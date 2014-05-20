@@ -26,7 +26,7 @@ class Keyboard{
 
 void keyPressed(){
   if(key == ESC){
-    key = 0;
+    //key = 0;
   }
   else if(key == CODED){
     if(key == RETURN){

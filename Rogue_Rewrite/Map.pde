@@ -11,7 +11,7 @@ class Map{
   boolean isRenderingFog;
   
   Map(int w, int h){
-    isRenderingFog = true;
+    isRenderingFog = false;
     floorup = false;
     this.width = w;
     this.height = h;
@@ -37,6 +37,7 @@ class Map{
     offsety = (SCREENHEIGHT / TILESIZE) / 2 - player.y;
     
     spawnstuff();
+    addentity(new Ally(5, 5));
     
     calcFog();
     /*

@@ -468,6 +468,31 @@ abstract class Creature extends Entity{
   
 }
 
+class Ally extends Creature{
+  
+  //Dialogue tree
+  Ally(int x, int y){
+    this.x = x;
+    this.y = y;
+    frame = 24;
+    
+    light = 0;
+  }
+  
+  boolean turn(Map map){
+    return false;
+  }
+  
+  void talk(){
+    //output current node
+  }
+  
+  void renderImage(int x, int y){
+    fill(#663399);
+    rect(x, y, TILESIZE, TILESIZE);
+  }
+}
+
 class Enemy extends Creature{
   
   int suggestion; //for swarm/team calcs
