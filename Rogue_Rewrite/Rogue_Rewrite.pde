@@ -17,6 +17,7 @@ final int MAXLIGHT = 8;
 
 Keyboard keyboard = new Keyboard();
 Dungeon test = new Dungeon();
+TalkNode asdf = new TalkNode();
 
 void setup(){
   size(SCREENWIDTH + 160, SCREENHEIGHT);
@@ -30,6 +31,7 @@ void draw(){
   background(0);
   test.render();
   test.process();
+  asdf.render();
 }
 
 boolean sketchFullScreen() {

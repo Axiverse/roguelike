@@ -29,16 +29,17 @@ class Node{
   void activate(Tree tree){
     tree.nextNode(0);
   }
+}
+
+class TalkNode extends Node{
+  //String
   
   void render(){
-    
+    fill(0, 0, 255);
+    rect(10, SCREENHEIGHT - 115, SCREENWIDTH - 20, 110, 8);
   }
 }
 
-class TalkNode extends Node(){
-  
-}
-
-class OptionNode extends Node(){
+class OptionNode extends Node{
   
 }

@@ -49,7 +49,7 @@ class PlayerStats extends Element{
   PlayerStats(int x, int y){
     this.x = x;
     this.y = y;
-    width = 144;
+    width = 160;
     height = 480;
   }
   
@@ -60,22 +60,22 @@ class PlayerStats extends Element{
     
     //Dungeon floor No
     fill(255, 255, 0);
-    rect(x + 100, y + 8, 40, 40);
+    rect(x + 108, y + 8, 40, 40);
     fill(0);
     textSize(32);
-    text(dungeon.floor, x + 110, y + 40);
+    text(dungeon.floor, x + 118, y + 40);
     
     //Health bar
     fill(255, 0, 0);
-    rect(x, y + 60, width * player.healthpercent, 10);
+    rect(x + 8, y + 60, (width - 18) * player.healthpercent, 10);
     textSize(10);
     fill(0);
-    text(player.health + " / " + player.maxHealth, x + 4, y + 70);
+    text(player.health + " / " + player.maxHealth, x + 12, y + 70);
     
     //Hotbar (Items)
     for(int i = 0; i < player.items.length; i ++){
       if(player.items[i] != null)
-        player.items[i].render(8 + x + 34 * i, y + 74);
+        player.items[i].render(24 + x + 34 * i, y + 74);
     }
   }
 }

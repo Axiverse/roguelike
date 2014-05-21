@@ -514,7 +514,7 @@ class Dungeon{
   Dungeon(){
     map = new Map(40, 40);
     floor = 0;
-    stats = new PlayerStats(486, 0);
+    stats = new PlayerStats(480, 0);
   }
   
   void process(){
