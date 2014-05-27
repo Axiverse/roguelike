@@ -510,16 +510,18 @@ class Dungeon{
   Map map;
   int floor;
   PlayerStats stats;
+  Controller controller;
   //Generator
   Dungeon(){
     map = new Map(40, 40);
+    controller = new Controller(map.player);
     floor = 0;
     stats = new PlayerStats(480, 0);
   }
   
   void process(){
     boolean enemyturn = false;
-    if(map.player.input(map)){
+    if(controller.move(map)){
       map.calcFog();
       enemyturn = true;
       map.tiles[map.player.x][map.player.y].onstep(map);
