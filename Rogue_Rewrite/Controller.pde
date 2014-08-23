@@ -89,6 +89,7 @@ class Controller{
           keyboard.cantoggle[122] = false;
         break;
       }
+      return true;
     }
     return false;
   }

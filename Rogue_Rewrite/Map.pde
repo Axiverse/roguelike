@@ -5,13 +5,15 @@ class Map{
   Entity[][] entities;
   Item[][] items;
   Player player;
+  
+  Structure currentRoom;
+  
+  ArrayList<Structure> structures;
   ArrayList<Entity> actors;
   boolean floorup;
   int offsetx, offsety;
-  boolean isRenderingFog;
   
   Map(int w, int h){
-    isRenderingFog = false;
     floorup = false;
     this.width = w;
     this.height = h;
@@ -25,37 +27,28 @@ class Map{
     tiles = new Tile[width][height];
     entities = new Entity[width][height];
     actors = new ArrayList();
+    structures = new ArrayList();
     
-    //generate();
-    clear();
-    tiles[20][20] = new Wall();
+    generate();
+    
     
     player = new Player(int(width/2), int(height/2));
+    //player = new Player(1, 1);
     addentity(player);
+    
+    currentRoom = findStructure(player.x, player.y);
     
     offsetx = (SCREENWIDTH / TILESIZE) / 2 - player.x;
     offsety = (SCREENHEIGHT / TILESIZE) / 2 - player.y;
     
     spawnstuff();
-    addentity(new Ally(5, 5));
+    //addentity(new Ally(5, 5));
     
-    calcFog();
-    /*
-    for(int i = 0; i < width; i ++){
-      for(int j = 0; j < height; j ++){
-        if(i == 0 || i == width - 1 || j == 0 || j == height - 1)
-          tiles[i][j] = new Wall();
-        else
-          tiles[i][j] = new Tile();
-      }
-    }
-    */
   }
   
   Map(int w, int h, Player player){
     this(w, h);
-    //generate();
-    clear();
+    generate();
     this.player = player;
     
     while(!(tiles[player.x][player.y] != null && tiles[player.x][player.y] instanceof Floor)){
@@ -85,64 +78,6 @@ class Map{
     */
     spawnstuff();
     
-    calcFog();
-  }
-  
-  boolean canSee(int x1, int y1, int x2, int y2){
-    /*
-    boolean swap = false;
-    if(abs(y2 - y1) > abs(x2 - x1)){
-      swap = true;
-      //switch x1 and y1
-      int temp = x1;
-      x1 = y1;
-      y1 = temp;
-      
-      temp = x2;
-      x2 = y2;
-      y2 = temp;
-    }
-    
-    if(x2 - x1 < 0){
-      int temp = x1;
-      x1 = x2;
-      x2 = temp;
-      
-      temp = y1;
-      y1 = y2;
-      y1 = temp;
-    }
-    
-    int x;
-    int y = y1;
-    int error = 0;
-    int deltay = y2 - y1;
-    int deltax = x2 - x1;
-    int threshold = (int)((float) deltay / 2.0);
-    
-    for(x = x1; x < x2; x ++){
-      if(swap){
-        if(tiles[y][x] != null && tiles[y][x].canmove)
-          return false;
-      }
-      else{
-        if(tiles[x][y] != null && tiles[x][y].canmove)
-          return false;
-      }
-      error += deltay;
-      if(deltay < 0){
-        if(error < -threshold){
-          error += deltax;
-          y --;
-        }
-      }
-      else if(error > threshold){
-        error -= deltax;
-        y ++;
-      }
-    }
-    */
-    return true;
   }
   
   void spawnstuff(){
@@ -181,15 +116,21 @@ class Map{
   
   void generate(){//oh boy, here we go
   
-  //Clearing the map
+    Structure current;
+    Structure temp;
+  
+    //Clearing the map
     for(int i = 0; i < width - 1; i ++){
       for(int j = 0; j < height - 1; j ++){
         tiles[i][j] = null;
         entities[i][j] = null;
       }
     }
+    structures.clear();
+    
     //Make a room in the center
-    makeroom((width / 2) - 4, (height / 2) - 4, 9, 9);
+    current = makeroom((width / 2) - 4, (height / 2) - 4, 9, 9);
+    
     //print("\n");
     int roomcount = 1;
     int roomwidth;
@@ -197,19 +138,22 @@ class Map{
     int i, j;
     boolean hasstair = false;
     float stairchance = .05; //testing to make good maps
+    
     for(int a = 0; a < 10000; a ++){
       
       i = (int)random(1, width - 1);
       j = (int)random(1, height - 1);
       
       if(tiles[i][j] instanceof Wall){
-        roomwidth = (int)random(4, 10);
-        roomheight = (int)random(4, 10);
+        roomwidth = (int)random(5, 10);
+        roomheight = (int)random(5, 10);
+        
+        current = findStructure(i, j);
         
         //UP
         if(tiles[i][j + 1] instanceof Floor){
-          
-          if(makeroom(i - roomwidth / 2, j - roomheight + 1, roomwidth, roomheight)){
+          temp = makeroom(i - roomwidth / 2, j - roomheight + 1, roomwidth, roomheight);
+          if(temp != null){
             if(!hasstair && random(1) < stairchance){
               tiles[i][j - roomheight / 2] = new Stair();
               hasstair = true;
@@ -217,14 +161,17 @@ class Map{
             tiles[i][j] = (random(1) > .5) ? new Door() : new Floor();
             tiles[i][j - 1] = new Floor();
             roomcount ++;
+            
+            if(current != null)
+              current.adjacent.add(temp);
           }
           
         }
         
         //LEFT
         if(tiles[i + 1][j] instanceof Floor){
-          
-          if(makeroom(i - roomwidth + 1, j - roomheight / 2, roomwidth, roomheight)){
+          temp = makeroom(i - roomwidth + 1, j - roomheight / 2, roomwidth, roomheight);
+          if(temp != null){
             if(!hasstair && random(1) < stairchance){
               tiles[i - roomwidth / 2][j] = new Stair();
               hasstair = true;
@@ -232,14 +179,17 @@ class Map{
             tiles[i][j] = (random(1) > .5) ? new Door() : new Floor();
             tiles[i - 1][j] = new Floor();
             roomcount ++;
+            
+            if(current != null)
+              current.adjacent.add(temp);
           }
           
         }
         
         //DOWN
         if(tiles[i][j - 1] instanceof Floor){
-          
-          if(makeroom(i - roomwidth / 2, j, roomwidth, roomheight)){
+          temp = makeroom(i - roomwidth / 2, j, roomwidth, roomheight);
+          if(temp != null){
             if(!hasstair && random(1) < stairchance){
               tiles[i][j + roomheight / 2] = new Stair();
               hasstair = true;
@@ -247,14 +197,17 @@ class Map{
             tiles[i][j] = (random(1) > .5) ? new Door() : new Floor();
             tiles[i][j + 1] = new Floor();
             roomcount ++;
+            
+            if(current != null)
+              current.adjacent.add(temp);
           }
           
         }
         
         //RIGHT
         if(tiles[i - 1][j] instanceof Floor){
-
-          if(makeroom(i, j - roomheight / 2, roomwidth, roomheight)){
+          temp = makeroom(i, j - roomheight / 2, roomwidth, roomheight);
+          if(temp != null){
             if(!hasstair && random(1) < stairchance){
               tiles[i + roomheight / 2][j] = new Stair();
               hasstair = true;
@@ -262,11 +215,16 @@ class Map{
             tiles[i][j] = (random(1) > .5) ? new Door() : new Floor();
             tiles[i + 1][j] = new Floor();
             roomcount ++;
+            
+            if(current != null)
+              current.adjacent.add(temp);
           }
         }
 
       }
     }
+    
+    
     while(!hasstair){
       i = (int)random(1, width - 1);
       j = (int)random(1, height - 1);
@@ -282,33 +240,57 @@ class Map{
 
   }
   
-  boolean makeroom(int x, int y, int width, int height){
+  Structure makeroom(int x, int y, int width, int height){
     if(x + width > this.width || y + height > this.height)
-      return false;
+      return null;
     if(x < 0 || y < 0)
-      return false;
+      return null;
+      
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
         if(entities[i + x][j + y] != null){
-          return false;
+          return null;
         }
         if(tiles[i + x][j + y] != null && !(tiles[i + x][j + y] instanceof Wall)){
-          return false;
+          return null;
         }
+      }
+    }
+    Room room = new Room(x, y, width, height);
+    addStructure(room);
+    return room;
+  }
+  
+  void addStructure(Structure structure){
+    structure.generate(this);
+    
+    structures.add(structure);
+  }
+  
+  Structure findStructure(int x, int y){
+    for(int i = 0; i < structures.size(); i ++){
+      Structure temp = structures.get(i);
+      if(temp.inBounds(x, y)){
+        return temp;
       }
     }
     
-    for(int i = 0; i < width; i ++){
-      for(int j = 0; j < height; j ++){
-        if(i == 0 || j == 0 || i == width - 1 || j == height - 1){
-          tiles[i + x][j + y] = new Wall();
-        }
-        else{
-          tiles[i + x][j + y] = new Floor();
-        }
-      }
+    return null;
+  }
+  
+  Structure findStructure(Structure current, int x, int y){
+    if(current == null)
+      return findStructure(x, y);
+    
+    if(current.inBounds(x, y))
+      return current;
+      
+    for(int i = 0; i < current.adjacent.size(); i ++){
+      if(current.adjacent.get(i).inBounds(x, y))
+        return current.adjacent.get(i);
     }
-    return true;
+    
+    return findStructure(x, y);
   }
   
   void addentity(Entity entity){
@@ -339,31 +321,6 @@ class Map{
       print("x: " + offsetx + " y: " + offsety + "\n");
     }
   }
-  
-  void calcFog(){
-    for(int i = 0; i < this.width; i ++){
-      for(int j = 0; j < this.height; j ++){
-        if(tiles[i][j] != null)
-          tiles[i][j].light = 0;
-      }
-    }
-    
-    for(int i = 0; i < this.width; i ++){
-      for(int j = 0; j < this.height; j ++){
-        if(entities[i][j] != null && entities[i][j].light > 0){
-          for(int a = -1 * entities[i][j].light; a < entities[i][j].light; a ++){
-            for(int b = -1 * entities[i][j].light; b < entities[i][j].light; b ++){
-              if(i + a >= 0 && j + b >= 0 && i + a < width && j + b < height/* && sqrt(pow(a, 2) + pow(b, 2)) <= MAXLIGHT */&& canSee(player.x, player.y, i + a, i + b)){
-                if(tiles[i + a][j + b] != null && entities[i][j].light > 0)
-                  tiles[i + a][j + b].light += MAXLIGHT - sqrt(pow(a, 2) + pow(b, 2));
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  
   
   void render(){
     
@@ -405,7 +362,7 @@ class Map{
     }
     
     else if(width + offsetx == (SCREENWIDTH / TILESIZE) && (player.direction == MOVE_RIGHT || player.direction == MOVE_LEFT)){
-        render(offsetx, offsety);
+      render(offsetx, offsety);
     }
     else if(height + offsety == (SCREENWIDTH / TILESIZE) && (player.direction == MOVE_DOWN || player.direction == MOVE_UP)){
       render(offsetx, offsety);
@@ -446,107 +403,31 @@ class Map{
         tempx = 1;
     }
     
-    for(int i = 0; i < width; i ++){
-      for(int j = 0; j < height; j ++){
-        if(tiles[i][j] != null){
-          tiles[i][j].render((i + x + tempx) * TILESIZE - (player.frame * tempx), (j + y + tempy) * TILESIZE - (player.frame * tempy));
-        }
-      }
+    for(int i = 0; i < structures.size(); i ++){
+      structures.get(i).renderFog(this, (x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
+      //println((x + tempx) * TILESIZE + (player.frame * tempx));
     }
     
-    for(int i = 0; i < width; i ++){
-      for(int j = 0; j < height; j ++){
-        if(entities[i][j] != null){
-          if(entities[i][j] instanceof Player)
-            entities[i][j].renderStill(x, y);
-          else{
-            entities[i][j].render((x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
-          }
-        }
-      }
+    if(currentRoom != null){
+      currentRoom.render(this, (x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
+      currentRoom.renderEntity(this, (x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
     }
     
-    for(int i = 0; i < width; i ++){
-      for(int j = 0; j < height; j ++){
-        if(tiles[i][j] != null && isRenderingFog){
-            tiles[i][j].renderFog((i + x + tempx) * TILESIZE - (player.frame * tempx), (j + y + tempy) * TILESIZE - (player.frame * tempy));
-        }
-      }
-    }
+    player.renderStill(x, y);
     
     player.frame += 4;
   }
   
   void render(int x, int y){
-    for(int i = 0; i < width; i ++){
-      for(int j = 0; j < height; j ++){
-        if(tiles[i][j] != null){
-          tiles[i][j].renderTile(i + x, j + y);
-        }
-      }
+    
+    for(int i = 0; i < structures.size(); i ++){
+      structures.get(i).renderTileFog(this, x, y);
     }
     
-    for(int i = 0; i < width; i ++){
-      for(int j = 0; j < height; j ++){
-        if(entities[i][j] != null){
-          entities[i][j].renderTile(x, y);
-        }
-      }
+    if(currentRoom != null){
+      currentRoom.renderTile(this, x, y);
     }
     
-    for(int i = 0; i < width; i ++){
-      for(int j = 0; j < height; j ++){
-        if(tiles[i][j] != null && isRenderingFog){
-          tiles[i][j].renderTileFog(i + x, j + y);
-        }
-      }
-    }
-    
-  }
-  
-}
-
-class Dungeon{
-  Map map;
-  int floor;
-  PlayerStats stats;
-  Controller controller;
-  //Generator
-  Dungeon(){
-    map = new Map(40, 40);
-    controller = new Controller(map.player);
-    floor = 0;
-    stats = new PlayerStats(480, 0);
-  }
-  
-  void process(){
-    boolean enemyturn = false;
-    if(controller.move(map)){
-      map.calcFog();
-      enemyturn = true;
-      map.tiles[map.player.x][map.player.y].onstep(map);
-      
-      if(map.floorup){
-        floor ++;
-        Player temp = map.player;
-        map = new Map(map.width, map.height, temp);
-      }
-      
-    }
-    if(enemyturn){
-      map.enemyturn();
-      if(map.player.health <= 0){
-        floor = 0;
-        map = new Map(10, 10);
-      }
-      enemyturn = false;
-    }
-    map.process();
-  }
-  
-  void render(){
-    map.render();
-    stats.render(map.player, this);
   }
   
 }
@@ -599,10 +480,8 @@ class Tile{
   }
 
   void renderFog(int x, int y){
-    noStroke();
-    fill(0, 256 - (light * 32));
+    fill(128);
     rect(x, y, TILESIZE, TILESIZE);
-    stroke(0);
   }
 
 }
@@ -618,6 +497,11 @@ class Wall extends Tile{
   
   void render(int x, int y){
     fill(64, 64, 128);
+    rect(x, y, TILESIZE, TILESIZE);
+  }
+  
+  void renderFog(int x, int y){
+    fill(32, 32, 64);
     rect(x, y, TILESIZE, TILESIZE);
   }
 }
@@ -651,6 +535,14 @@ class Door extends Tile{
       fill(255);
     else
       fill(128, 96, 64);
+    rect(x, y, TILESIZE, TILESIZE);
+  }
+  
+  void renderFog(int x, int y){
+    if(canmove)
+      fill(160);
+    else
+      fill(64, 48, 32);
     rect(x, y, TILESIZE, TILESIZE);
   }
 }

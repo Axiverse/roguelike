@@ -16,7 +16,7 @@ final int ATK_RIGHT = 8;
 final int MAXLIGHT = 8;
 
 Keyboard keyboard = new Keyboard();
-Dungeon test = new Dungeon();
+Scene scene = new DungeonScene();
 //TalkNode asdf = new TalkNode();
 
 void setup(){
@@ -28,9 +28,10 @@ void setup(){
 }
 
 void draw(){
+  frame.setTitle(Float.toString(frameRate));
   background(0);
-  test.render();
-  test.process();
+  scene.update();
+  scene.render();
   //asdf.render();
 }
 

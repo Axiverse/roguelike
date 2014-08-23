@@ -43,7 +43,7 @@ class Menu extends Element{
     
   }
 }
-
+/*
 class PlayerStats extends Element{
   
   PlayerStats(int x, int y){
@@ -79,3 +79,4 @@ class PlayerStats extends Element{
     }
   }
 }
+*/

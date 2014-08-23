@@ -13,7 +13,7 @@ abstract class Item extends Entity{
     light = 0;
   }
   
-  abstract void activate(Dungeon dungeon);
+  abstract void activate(Map map);
   
   void renderTile(int a, int b){
     //Some stuff here?
@@ -28,7 +28,7 @@ class Tool extends Item{
     
   }
   
-  void activate(Dungeon dungeon){
+  void activate(Map map){
     return;
   }
 }
@@ -36,8 +36,8 @@ class Tool extends Item{
 class Weapond extends Tool{
   int damage;
   
-  void activate(Dungeon dungeon){
-    Player temp = dungeon.map.player;//I'm too lazy to type this out again
+  void activate(Map map){
+    Player temp = map.player;//I'm too lazy to type this out again
     switch(temp.direction){
       case MOVE_UP:
         
