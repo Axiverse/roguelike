@@ -1,4 +1,4 @@
-class Player extends Creature{
+ class Player extends Creature{
   
   Item[] items;
   
@@ -13,7 +13,7 @@ class Player extends Creature{
       items[i] = new Weapond();
     }
     
-    this.light = 8;
+    //this.light = 8;
   }
   
   

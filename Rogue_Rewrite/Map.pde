@@ -2,7 +2,7 @@ class Map{
   
   int width, height;
   Tile[][] tiles;
-  Entity[][] entities;
+  Creature[][] creatures;
   Item[][] items;
   Player player;
   
@@ -25,7 +25,9 @@ class Map{
       height = 20;
     
     tiles = new Tile[width][height];
-    entities = new Entity[width][height];
+    creatures = new Creature[width][height];
+    items = new Item[width][height];
+    
     actors = new ArrayList();
     structures = new ArrayList();
     
@@ -34,7 +36,8 @@ class Map{
     
     player = new Player(int(width/2), int(height/2));
     //player = new Player(1, 1);
-    addentity(player);
+    addCreature(player);
+    items[player.x][player.y + 1] = new Tool(player.x, player.y + 1);
     
     currentRoom = findStructure(player.x, player.y);
     
@@ -60,7 +63,7 @@ class Map{
       }
     }
     
-    addentity(player);
+    addCreature(player);
     
     offsetx = (SCREENWIDTH / TILESIZE) / 2 - player.x;
     offsety = (SCREENHEIGHT / TILESIZE) / 2 - player.y;
@@ -87,12 +90,12 @@ class Map{
     for(int i = 0; i < 1000; i ++){
       randx = (int)random(0, width - 1);
       randy = (int)random(0, height - 1);
-      if(tiles[randx][randy] != null && tiles[randx][randy].canmove && entities[randx][randy] == null){
+      if(tiles[randx][randy] != null && tiles[randx][randy].canmove && creatures[randx][randy] == null){
         if(random(1) > .3)
           //print("wolf here \n");
-          addentity(new Wolf(randx, randy));
+          addCreature(new Wolf(randx, randy));
         else
-          addentity(new Ghost(randx, randy));
+          addCreature(new Ghost(randx, randy));
         enemycount ++;
         
       }
@@ -109,7 +112,7 @@ class Map{
         if(i == 0 || i == width - 1 || j == 0 || j == height - 1){
           tiles[i][j] = new Wall();
         }
-        entities[i][j] = null;
+        creatures[i][j] = null;
       }
     }
   }
@@ -123,7 +126,7 @@ class Map{
     for(int i = 0; i < width - 1; i ++){
       for(int j = 0; j < height - 1; j ++){
         tiles[i][j] = null;
-        entities[i][j] = null;
+        creatures[i][j] = null;
       }
     }
     structures.clear();
@@ -162,8 +165,10 @@ class Map{
             tiles[i][j - 1] = new Floor();
             roomcount ++;
             
-            if(current != null)
+            if(current != null){
               current.adjacent.add(temp);
+              temp.adjacent.add(current);
+            }
           }
           
         }
@@ -180,8 +185,10 @@ class Map{
             tiles[i - 1][j] = new Floor();
             roomcount ++;
             
-            if(current != null)
+            if(current != null){
               current.adjacent.add(temp);
+              temp.adjacent.add(current);
+            }
           }
           
         }
@@ -198,8 +205,10 @@ class Map{
             tiles[i][j + 1] = new Floor();
             roomcount ++;
             
-            if(current != null)
+            if(current != null){
               current.adjacent.add(temp);
+              temp.adjacent.add(current);
+            }
           }
           
         }
@@ -216,8 +225,10 @@ class Map{
             tiles[i + 1][j] = new Floor();
             roomcount ++;
             
-            if(current != null)
+            if(current != null){
               current.adjacent.add(temp);
+              temp.adjacent.add(current);
+            }
           }
         }
 
@@ -248,7 +259,7 @@ class Map{
       
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
-        if(entities[i + x][j + y] != null){
+        if(creatures[i + x][j + y] != null){
           return null;
         }
         if(tiles[i + x][j + y] != null && !(tiles[i + x][j + y] instanceof Wall)){
@@ -293,9 +304,9 @@ class Map{
     return findStructure(x, y);
   }
   
-  void addentity(Entity entity){
-    entities[entity.x][entity.y] = entity;
-    actors.add(entity);
+  void addCreature(Creature creature){
+    creatures[creature.x][creature.y] = creature;
+    actors.add(creature);
   }
   
   void enemyturn(){
@@ -312,7 +323,7 @@ class Map{
   void process(){
     for(int i = 0; i < actors.size(); i ++){
       if(actors.get(i) instanceof Creature && ((Creature)actors.get(i)).health <= 0){
-        entities[actors.get(i).x][actors.get(i).y] = null;
+        creatures[actors.get(i).x][actors.get(i).y] = null;
         actors.remove(i);
       }
     }
@@ -404,13 +415,17 @@ class Map{
     }
     
     for(int i = 0; i < structures.size(); i ++){
-      structures.get(i).renderFog(this, (x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
+      //structures.get(i).renderFog(this, (x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
       //println((x + tempx) * TILESIZE + (player.frame * tempx));
     }
     
     if(currentRoom != null){
       currentRoom.render(this, (x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
       currentRoom.renderEntity(this, (x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
+      
+      for(int a = 0; a < currentRoom.adjacent.size(); a ++){
+        currentRoom.adjacent.get(a).render(this, (x + tempx) * TILESIZE - (player.frame * tempx), (y + tempy) * TILESIZE - (player.frame * tempy));
+      }
     }
     
     player.renderStill(x, y);
@@ -421,128 +436,24 @@ class Map{
   void render(int x, int y){
     
     for(int i = 0; i < structures.size(); i ++){
-      structures.get(i).renderTileFog(this, x, y);
+      //structures.get(i).renderTileFog(this, x, y);
     }
     
     if(currentRoom != null){
       currentRoom.renderTile(this, x, y);
+      for(int a = 0; a < currentRoom.adjacent.size(); a ++){
+        currentRoom.adjacent.get(a).renderTile(this, x, y);
+      }
     }
     
   }
   
 }
 
-
-/*
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-
-class Tile{
-  //tile type
-  //trap? activated?
-  boolean canmove;
-  int light;
+abstract class Generator{
+  int width;
+  int height;
+  String style;
   
-  Tile(){
-    canmove = true;
-  }
-  
-  void onstep(Map map){
-    return;
-  }
-  
-  void activate(Map map){
-    return;
-  }
-  
-  void renderTile(int x, int y){
-    render(x * TILESIZE, y * TILESIZE);
-  }
-  
-  void render(int x, int y){
-    fill(192);
-    rect(x, y, TILESIZE, TILESIZE);
-  }
-
-  void renderTileFog(int x, int y){
-    renderFog(x * TILESIZE, y * TILESIZE);
-  }
-
-  void renderFog(int x, int y){
-    fill(128);
-    rect(x, y, TILESIZE, TILESIZE);
-  }
-
-}
-
-class Floor extends Tile{
-  //Hey, guess what? I don't do anything!
-}
-
-class Wall extends Tile{
-  Wall(){
-    canmove = false;
-  }
-  
-  void render(int x, int y){
-    fill(64, 64, 128);
-    rect(x, y, TILESIZE, TILESIZE);
-  }
-  
-  void renderFog(int x, int y){
-    fill(32, 32, 64);
-    rect(x, y, TILESIZE, TILESIZE);
-  }
-}
-
-class Stair extends Tile{
-  void onstep(Map map){
-    map.floorup = true;
-  }
-  
-  void render(int x, int y){
-    fill(255, 255, 0);
-    rect(x, y, TILESIZE, TILESIZE);
-  }
-}
-
-class Door extends Tile{
-  Door(){
-    canmove = false;
-  }
-  
-  void activate(Map map){
-    canmove = !canmove;
-  }
-  
-  void onstep(Map map){
-    return;
-  }
-  
-  void render(int x, int y){
-    if(canmove)
-      fill(255);
-    else
-      fill(128, 96, 64);
-    rect(x, y, TILESIZE, TILESIZE);
-  }
-  
-  void renderFog(int x, int y){
-    if(canmove)
-      fill(160);
-    else
-      fill(64, 48, 32);
-    rect(x, y, TILESIZE, TILESIZE);
-  }
+  //make a weighted generator here
 }

@@ -27,6 +27,11 @@ class Room extends Structure{
   boolean hasStarirs;
   boolean doorOpen;
   
+  Room(){
+    println("why are you using this ROOM constructor?");
+    return;
+  }
+  
   Room(int x, int y, int width, int height){
     adjacent = new ArrayList();
     
@@ -43,7 +48,7 @@ class Room extends Structure{
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
         if(map.tiles[this.x + i][this.y + j] != null)
-          map.tiles[this.x + i][this.y + j].renderTile(this.x + i + x, this.y + j + y);
+          map.tiles[this.x + i][this.y + j].renderTile(map, this.x + i + x, this.y + j + y);
       }
     }
     
@@ -53,8 +58,10 @@ class Room extends Structure{
   void renderEntityTile(Map map, int x, int y){
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
-        if(map.entities[this.x + i][this.y + j] != null)
-          map.entities[this.x + i][this.y + j].renderTile(x, y);
+        if(map.items[this.x + i][this.y + j] != null)
+          map.items[this.x + i][this.y + j].renderTile(x, y);
+        if(map.creatures[this.x + i][this.y + j] != null)
+          map.creatures[this.x + i][this.y + j].renderTile(x, y);
       }
     }
   }
@@ -72,22 +79,23 @@ class Room extends Structure{
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
         if(map.tiles[this.x + i][this.y + j] != null){
-          map.tiles[this.x + i][this.y + j].render(x + (this.x + i) * TILESIZE, y + (this.y + j) * TILESIZE);
+          map.tiles[this.x + i][this.y + j].render(map, x + (this.x + i) * TILESIZE, y + (this.y + j) * TILESIZE);
           //println(this.x + i);
         }
       }
     }
-    
   }
   
   void renderEntity(Map map, int x, int y){
     for(int i = 0; i < width; i ++){
       for(int j = 0; j < height; j ++){
-        if(map.entities[this.x + i][this.y + j] != null){
-          if(map.entities[this.x + i][this.y + j] instanceof Player)
+        if(map.items[this.x + i][this.y + j] != null)
+          map.items[this.x + i][this.y + j].render(x, y);
+        if(map.creatures[this.x + i][this.y + j] != null){
+          if(map.creatures[this.x + i][this.y + j] instanceof Player)
             continue;
           else
-            map.entities[this.x + i][this.y + j].render(x, y);
+            map.creatures[this.x + i][this.y + j].render(x, y);
           //println(this.x + i);
         }
       }
@@ -124,3 +132,4 @@ class Room extends Structure{
     
   }
 }
+

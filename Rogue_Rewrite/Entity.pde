@@ -3,7 +3,7 @@ abstract class Entity{
   int direction;
   int nextTurn;
   
-  int light;
+  //int light;
   int frame;
   
   //weapon
@@ -19,7 +19,7 @@ abstract class Entity{
     this.y = y;
     frame = 24;
     
-    light = 0;
+    //light = 0;
   }
   
   boolean turn(Map map){
@@ -91,7 +91,7 @@ abstract class Creature extends Entity{
     healthpercent = (float) health / (float) maxHealth;
     
     this.frame = 24;
-    this.light = 0;
+    //this.light = 0;
   }
   
   int maxHealth;
@@ -309,40 +309,40 @@ abstract class Creature extends Entity{
   boolean move(int direction, Map map){
     switch(direction){
       case MOVE_UP:
-        if(y > 0 && map.tiles[x][y - 1] != null && map.entities[x][y - 1] == null && map.tiles[x][y - 1].canmove){
-          map.entities[x][y] = null;
+        if(y > 0 && map.tiles[x][y - 1] != null && map.creatures[x][y - 1] == null && map.tiles[x][y - 1].canmove){
+          map.creatures[x][y] = null;
           y --;
-          map.entities[x][y] = this;
+          map.creatures[x][y] = this;
           frame = 0;
           this.direction = direction;
           return true;
         }
       break;
       case MOVE_LEFT:
-        if(x > 0 && map.tiles[x - 1][y] != null && map.entities[x - 1][y] == null && map.tiles[x - 1][y].canmove){
-          map.entities[x][y] = null;
+        if(x > 0 && map.tiles[x - 1][y] != null && map.creatures[x - 1][y] == null && map.tiles[x - 1][y].canmove){
+          map.creatures[x][y] = null;
           x --;
-          map.entities[x][y] = this;
+          map.creatures[x][y] = this;
           frame = 0;
           this.direction = direction;
           return true;
         }
       break;
       case MOVE_DOWN:
-        if(y < map.height - 1 && map.tiles[x][y + 1] != null && map.entities[x][y + 1] == null && map.tiles[x][y + 1].canmove){
-          map.entities[x][y] = null;
+        if(y < map.height - 1 && map.tiles[x][y + 1] != null && map.creatures[x][y + 1] == null && map.tiles[x][y + 1].canmove){
+          map.creatures[x][y] = null;
           y ++;
-          map.entities[x][y] = this;
+          map.creatures[x][y] = this;
           frame = 0;
           this.direction = direction;
           return true;
         }
       break;
       case MOVE_RIGHT:
-        if(x < map.width - 1 && map.tiles[x + 1][y] != null && map.entities[x + 1][y] == null && map.tiles[x + 1][y].canmove){
-          map.entities[x][y] = null;
+        if(x < map.width - 1 && map.tiles[x + 1][y] != null && map.creatures[x + 1][y] == null && map.tiles[x + 1][y].canmove){
+          map.creatures[x][y] = null;
           x ++;
-          map.entities[x][y] = this;
+          map.creatures[x][y] = this;
           frame = 0;
           this.direction = direction;
           return true;
@@ -357,49 +357,49 @@ abstract class Creature extends Entity{
     int damage = 1;
     switch(direction){
       case MOVE_UP:
-        if(y > 0 && map.entities[x][y - 1] != null){
-          if(!(map.entities[x][y - 1] instanceof Creature))
+        if(y > 0 && map.creatures[x][y - 1] != null){
+          if(!(map.creatures[x][y - 1] instanceof Creature))
             return false;
-          ((Creature)map.entities[x][y - 1]).health -= damage;
-          ((Creature)map.entities[x][y - 1]).calculatehealth();
-          //if(((Creature)map.entities[x][y - 1]).health <= 0){
-            //map.entities[x][y - 1] = null;
+          ((Creature)map.creatures[x][y - 1]).health -= damage;
+          ((Creature)map.creatures[x][y - 1]).calculatehealth();
+          //if(((Creature)map.creatures[x][y - 1]).health <= 0){
+            //map.creatures[x][y - 1] = null;
           //}
           return true;
         }
       break;
       case MOVE_LEFT:
-        if(x > 0 && map.entities[x - 1][y] != null){
-          if(!(map.entities[x - 1][y] instanceof Creature))
+        if(x > 0 && map.creatures[x - 1][y] != null){
+          if(!(map.creatures[x - 1][y] instanceof Creature))
             return false;
-          ((Creature)map.entities[x - 1][y]).health -= damage;
-          ((Creature)map.entities[x - 1][y]).calculatehealth();
-          //if(map.entities[x - 1][y].health <= 0){
-            //map.entities[x - 1][y] = null;
+          ((Creature)map.creatures[x - 1][y]).health -= damage;
+          ((Creature)map.creatures[x - 1][y]).calculatehealth();
+          //if(map.creatures[x - 1][y].health <= 0){
+            //map.creatures[x - 1][y] = null;
           //}
           return true;
         }
       break;
       case MOVE_DOWN:
-        if(y < map.height - 1 && map.entities[x][y + 1] != null){
-          if(!(map.entities[x][y + 1] instanceof Creature))
+        if(y < map.height - 1 && map.creatures[x][y + 1] != null){
+          if(!(map.creatures[x][y + 1] instanceof Creature))
             return false;
-          ((Creature)map.entities[x][y + 1]).health -= damage;
-          ((Creature)map.entities[x][y + 1]).calculatehealth();
-          //if(map.entities[x][y + 1].health <= 0){
-            //map.entities[x][y + 1] = null;
+          ((Creature)map.creatures[x][y + 1]).health -= damage;
+          ((Creature)map.creatures[x][y + 1]).calculatehealth();
+          //if(map.creatures[x][y + 1].health <= 0){
+            //map.creatures[x][y + 1] = null;
           //}
           return true;
         }
       break;
       case MOVE_RIGHT:
-        if(x < map.width - 1 && map.entities[x + 1][y] != null){
-          if(!(map.entities[x + 1][y] instanceof Creature))
+        if(x < map.width - 1 && map.creatures[x + 1][y] != null){
+          if(!(map.creatures[x + 1][y] instanceof Creature))
             return false;
-          ((Creature)map.entities[x + 1][y]).health -= damage;
-          ((Creature)map.entities[x + 1][y]).calculatehealth();
-          //if(map.entities[x + 1][y].health <= 0){
-            //map.entities[x + 1][y] = null;
+          ((Creature)map.creatures[x + 1][y]).health -= damage;
+          ((Creature)map.creatures[x + 1][y]).calculatehealth();
+          //if(map.creatures[x + 1][y].health <= 0){
+            //map.creatures[x + 1][y] = null;
           //}
           return true;
         }

@@ -1,13 +1,17 @@
-class Scene{
+abstract class Scene{
   ArrayList<Element> elements;
   Controller controller;
   
   Scene(){
     elements = new ArrayList();
   }
-
+  
   void render(){
-    for(int i = elements.size(); i > 0; i ++){
+    renderElements();
+  }
+
+  void renderElements(){
+    for(int i = elements.size() - 1; i >= 0; i --){
       elements.get(i).render();
     }
   }
@@ -21,10 +25,12 @@ class Scene{
 class DungeonScene extends Scene{
   Map map;
   int floor;
+  Notifications notices;
   //PlayerStats stats;
   
   DungeonScene(){
     map = new Map(40, 40);
+    elements.add(new MiniMap(0, 0));
     controller = new Controller(map.player);
     floor = 0;
     //stats = new PlayerStats(480, 0);
@@ -58,6 +64,7 @@ class DungeonScene extends Scene{
   
   void render(){
     map.render();
+    renderElements();
     //stats.render(map.player, this);
   }
 }

@@ -21,14 +21,15 @@ Scene scene = new DungeonScene();
 
 void setup(){
   size(SCREENWIDTH + 160, SCREENHEIGHT);
+  ellipseMode(CORNER);
   //size(displayWidth, displayHeight);
   frameRate(60);
-  frame.setTitle("not rogue");
+  frame.setTitle("All Hail Dave Soon");
   randomSeed(10);
 }
 
 void draw(){
-  frame.setTitle(Float.toString(frameRate));
+  //frame.setTitle(Float.toString(frameRate));
   background(0);
   scene.update();
   scene.render();
@@ -37,6 +38,18 @@ void draw(){
 
 boolean sketchFullScreen() {
   //return true;
+  return false;
+}
+
+boolean isAdjacent(int x1, int y1, int x2, int y2){
+  if(x1 == x2){
+    if(abs(y1 - y2) == 1)
+      return false;
+  }
+  if(y1 == y2){
+    if(abs(x1 - x2) == 1)
+      return true;
+  }
   return false;
 }
 

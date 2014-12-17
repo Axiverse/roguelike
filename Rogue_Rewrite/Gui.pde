@@ -80,3 +80,29 @@ class PlayerStats extends Element{
   }
 }
 */
+
+class MiniMap extends Element{
+  
+  Map map;
+  int x, y;
+  ArrayList<Structure> rooms;
+  
+  MiniMap(int x, int y){
+    this.x = x;
+    this.y = y;
+    rooms = new ArrayList();
+  }
+  
+  void render(){
+    for(int i = 0; i < rooms.size(); i ++){
+      for(int a = 0; a < rooms.get(i).width; a ++){
+        for(int b = 0; b < rooms.get(i).height; b ++){
+          if(rooms.get(i).tiles[a][b] != null){
+            fill(rooms.get(i).tiles[a][b] instanceof Wall ? 255 : 128);
+            rect(x + a * 2, y + b * 2, 2, 2);
+          }
+        }
+      }
+    }
+  }
+}
