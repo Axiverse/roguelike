@@ -25,7 +25,9 @@ void setup(){
   //size(displayWidth, displayHeight);
   frameRate(60);
   frame.setTitle("All Hail Dave Soon");
+  
   randomSeed(10);
+  loadTiles();
 }
 
 void draw(){

@@ -44,8 +44,19 @@ class Tile{
 
 }
 
+PImage floorImage;
+PImage stairImage;
+
+void loadTiles() {
+  floorImage = loadImage("images/floor_tile.png");
+  stairImage = loadImage("images/stairs_up.png");
+}
+
 class Floor extends Tile{
   //Hey, guess what? I don't do anything!
+  void render(int x, int y) {
+    image(floorImage, x, y, TILESIZE, TILESIZE);
+  }
 }
 
 class Wall extends Tile{
@@ -70,8 +81,7 @@ class Stair extends Tile{
   }
   
   void render(int x, int y){
-    fill(255, 255, 0);
-    rect(x, y, TILESIZE, TILESIZE);
+    image(stairImage, x, y, TILESIZE, TILESIZE);
   }
 }
 
