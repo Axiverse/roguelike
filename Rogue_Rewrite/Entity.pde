@@ -433,6 +433,8 @@ abstract class Creature extends Entity{
       //Square
       renderImage((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b);
       
+      b -= 6;
+      
       fill(255, 255, 255);
       rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
       
@@ -444,6 +446,8 @@ abstract class Creature extends Entity{
     else{
       renderImage(x * TILESIZE + a, y * TILESIZE + b);
             
+      b -= 6;
+      
       fill(255, 255, 255);
       rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
       
@@ -457,7 +461,9 @@ abstract class Creature extends Entity{
   }
   
   void renderStill(int a, int b){
-    renderImage(x * TILESIZE + a, y * TILESIZE + b);
+    //renderImage(x * TILESIZE + a, y * TILESIZE + b);
+    
+    b -= 6;
     
     fill(255, 255, 255);
     rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, 6);

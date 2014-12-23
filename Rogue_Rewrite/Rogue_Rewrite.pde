@@ -28,6 +28,7 @@ void setup(){
   
   randomSeed(10);
   loadTiles();
+  loadEnemies();
 }
 
 void draw(){

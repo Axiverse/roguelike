@@ -23,20 +23,21 @@
   }
   
   void renderImage(int x, int y){
-    fill(255, 0, 0);
-    rect(x, y, TILESIZE, TILESIZE);
+    //fill(255, 0, 0);
+    //rect(x, y, TILESIZE, TILESIZE);
+    image(heroImage, x, y, TILESIZE, TILESIZE);
   }
   
     void renderStill(int a, int b){
       //this.frame = 24;
-      fill(255, 0, 0);
-      rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, TILESIZE);
+      //fill(255, 0, 0);
+      renderImage((x + a) * TILESIZE, (y + b) * TILESIZE);
       
       fill(255, 255, 255);
-      rect((x + a) * TILESIZE, (y + b) * TILESIZE, TILESIZE, 6);
+      rect((x + a) * TILESIZE, (y + b) * TILESIZE - 6, TILESIZE, 6);
       
       fill(0, 255, 0);
-      rect((x + a) * TILESIZE, (y + b) * TILESIZE, (healthpercent) * TILESIZE, 6);
+      rect((x + a) * TILESIZE, (y + b) * TILESIZE - 6, (healthpercent) * TILESIZE, 6);
   }
   
   void render(int a, int b){
@@ -59,6 +60,8 @@
     if(frame < 24){
       renderImage((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b);
       
+      b -= 6;
+      
       fill(255, 255, 255);
       rect((x - tempx) * TILESIZE + (frame * tempx) + a, (y - tempy) * TILESIZE + (frame * tempy) + b, TILESIZE, 6);
       
@@ -69,6 +72,8 @@
     }
     else{
       renderImage(x * TILESIZE + a, y * TILESIZE + b);
+      
+      b -= 6;
       
       fill(255, 255, 255);
       rect(x * TILESIZE + a, y * TILESIZE + b, TILESIZE, 6);

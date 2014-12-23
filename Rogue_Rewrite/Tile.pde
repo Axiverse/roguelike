@@ -46,10 +46,14 @@ class Tile{
 
 PImage floorImage;
 PImage stairImage;
+PImage doorImage;
+PImage wallImage;
 
 void loadTiles() {
   floorImage = loadImage("images/floor_tile.png");
   stairImage = loadImage("images/stairs_up.png");
+  doorImage = loadImage("images/door.png");
+  wallImage = loadImage("images/wall.png");
 }
 
 class Floor extends Tile{
@@ -65,8 +69,7 @@ class Wall extends Tile{
   }
   
   void render(int x, int y){
-    fill(64, 64, 128);
-    rect(x, y, TILESIZE, TILESIZE);
+    image(wallImage, x, y, TILESIZE, TILESIZE);
   }
   
   void renderFog(int x, int y){
@@ -97,11 +100,11 @@ class Door extends Tile{
     if(room2 != null)
       room2.render(map, x, y);
     */
-    if(canmove)
-      fill(255);
-    else
-      fill(128, 96, 64);
-    rect(x, y, TILESIZE, TILESIZE);
+    if(canmove) {
+      image(floorImage, x, y, TILESIZE, TILESIZE);
+    } else {
+      image(doorImage, x, y, TILESIZE, TILESIZE);
+    }
   }
   
   void activate(Map map){

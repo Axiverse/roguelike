@@ -1,3 +1,13 @@
+PImage wolfImage;
+PImage ghostImage;
+PImage heroImage;
+
+void loadEnemies() {
+  wolfImage = loadImage("images/wolf.png");
+  ghostImage = loadImage("images/ghost.png"); 
+  heroImage = loadImage("images/hero.png");
+}
+
 class Wolf extends Enemy{
 
   boolean isalpha;
@@ -72,8 +82,9 @@ class Wolf extends Enemy{
   }
   
   void renderImage(int x, int y){
-    fill(0, 255, 255);
-    rect(x, y, TILESIZE, TILESIZE);
+    //fill(0, 255, 255);
+    //rect(x, y, TILESIZE, TILESIZE);
+    image(wolfImage, x, y, TILESIZE, TILESIZE);
   }
 }
 
@@ -117,7 +128,8 @@ class Ghost extends Enemy{
   }
   
   void renderImage(int x, int y){
-    fill(0);
-    rect(x, y, TILESIZE, TILESIZE);
+    //fill(0);
+    //rect(x, y, TILESIZE, TILESIZE);
+    image(ghostImage, x, y, TILESIZE, TILESIZE);
   }
 }
