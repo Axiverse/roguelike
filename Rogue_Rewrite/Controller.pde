@@ -27,7 +27,7 @@ class Controller{
       keyboard.previous[RIGHT] -= MOVE_TIME;
 
     //Movement in 4 directions
-    if(keyboard.timedpress(UP, MOVE_TIME) && !keyboard.keys[DOWN]){
+    if(keyboard.keys[UP] && !keyboard.keys[DOWN]){
       if(!player.attack(MOVE_UP, map)){
         if(!player.move(MOVE_UP, map)){
           if(player.direction != MOVE_UP){
@@ -40,7 +40,7 @@ class Controller{
       }
       return false;
     }
-    else if(keyboard.timedpress(LEFT, MOVE_TIME) && !keyboard.keys[RIGHT]){
+    else if(keyboard.keys[LEFT] && !keyboard.keys[RIGHT]){
       keyboard.previous[RIGHT] -= MOVE_TIME;
       if(!player.attack(MOVE_LEFT, map)){
         if(!player.move(MOVE_LEFT, map)){
@@ -54,7 +54,7 @@ class Controller{
       }
       return true;
     }
-    else if(keyboard.timedpress(DOWN, MOVE_TIME) && !keyboard.keys[UP]){
+    else if(keyboard.keys[DOWN] && !keyboard.keys[UP]){
       if(!player.attack(MOVE_DOWN, map)){
         if(!player.move(MOVE_DOWN, map)){
           if(player.direction != MOVE_DOWN){
@@ -67,7 +67,7 @@ class Controller{
       }
       return true;
     }
-    else if(keyboard.timedpress(RIGHT, MOVE_TIME) && !keyboard.keys[LEFT]){
+    else if(keyboard.keys[RIGHT] && !keyboard.keys[LEFT]){
       if(!player.attack(MOVE_RIGHT, map)){
         if(!player.move(MOVE_RIGHT, map)){
           if(player.direction!= MOVE_RIGHT){
